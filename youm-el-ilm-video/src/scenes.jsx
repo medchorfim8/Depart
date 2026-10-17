@@ -471,7 +471,7 @@ export const S10 = () => {
         </Card>
       </In>
       <In delay={80} from="up" style={{position: 'absolute', top: 1260, left: 40, right: 40, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 24, padding: '30px 20px', borderRadius: 36, background: 'rgba(5,12,42,.82)', border: '2px solid rgba(130,160,255,.25)'}}>
-        <span style={T({fontSize: 42, fontWeight: 700, color: C.mute})}>للاستفسار: <b style={{color: C.w, fontWeight: 900}}>المكلّف بالملف</b></span>
+        <span style={T({fontSize: 42, fontWeight: 700, color: C.mute})}>للاستفسار، الاتصال بالسيد <b style={{color: C.w, fontWeight: 900}}>فوزي جاري</b></span>
         <div style={{display: 'flex', gap: 30}}>
           {['93 667 475', '95 542 040'].map((n, i) => (
             <In key={n} delay={92 + i * 10} from="scale">
