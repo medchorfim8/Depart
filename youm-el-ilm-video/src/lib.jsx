@@ -97,6 +97,10 @@ const shapePath = (k, s) => {
       const a = h * 0.85, b = h * 0.5;
       return <g><polygon points={`0,${-h} ${a},${-b} ${a},${b} 0,${h} ${-a},${b} ${-a},${-b}`} /><path d={`M${-a},${-b} L0,0 L${a},${-b} M0,0 L0,${h}`} /></g>;
     }
+    case 'star': { const p = [...Array(10)].map((_, i) => { const r = i % 2 ? h * 0.45 : h, a = -Math.PI / 2 + i * Math.PI / 5; return `${Math.cos(a) * r},${Math.sin(a) * r}`; }).join(' '); return <polygon points={p} />; }
+    case 'spark': return <path d={`M0,${-h} Q${h * 0.12},${-h * 0.12} ${h},0 Q${h * 0.12},${h * 0.12} 0,${h} Q${-h * 0.12},${h * 0.12} ${-h},0 Q${-h * 0.12},${-h * 0.12} 0,${-h} Z`} />;
+    case 'cap': return <g><polygon points={`0,${-h * 0.55} ${h},${-h * 0.1} 0,${h * 0.35} ${-h},${-h * 0.1}`} /><path d={`M${-h * 0.55},${h * 0.08} L${-h * 0.55},${h * 0.5} Q0,${h * 0.75} ${h * 0.55},${h * 0.5} L${h * 0.55},${h * 0.08} M${h * 0.75},${-h * 0.02} L${h * 0.75},${h * 0.55}`} /></g>;
+    case 'book': return <g><path d={`M0,${-h * 0.35} Q${-h * 0.5},${-h * 0.6} ${-h},${-h * 0.4} L${-h},${h * 0.5} Q${-h * 0.5},${h * 0.3} 0,${h * 0.55} Q${h * 0.5},${h * 0.3} ${h},${h * 0.5} L${h},${-h * 0.4} Q${h * 0.5},${-h * 0.6} 0,${-h * 0.35} Z`} /><path d={`M0,${-h * 0.35} L0,${h * 0.55}`} /></g>;
     case 'wave': return <path d={`M${-h},0 q${h / 4},${-h / 3} ${h / 2},0 t${h / 2},0 t${h / 2},0 t${h / 2},0`} />;
     default: return <circle r={h} />;
   }

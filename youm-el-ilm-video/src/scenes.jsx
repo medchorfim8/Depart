@@ -5,48 +5,83 @@ import {Logo3D} from './logo3d';
 
 const T = (s, st = {}) => ({fontFamily: FONT, color: C.w, ...st, ...s});
 
+const CELEBRATE = ['star', 'cap', 'book', 'spark', 'star'];
+
 /* background per scene */
 export const Base = ({kinds, seed, tone = 'deep', children, glow = [80, 20]}) => {
   const f = useCurrentFrame();
   const bgs = {
-    deep: `radial-gradient(120% 70% at ${glow[0]}% ${glow[1]}%, #1B3CA8 0%, #0B1E5B 45%, #050C2A 100%)`,
+    deep: `radial-gradient(120% 70% at ${glow[0]}% ${glow[1]}%, #2346B8 0%, #0D2066 45%, #050C2A 100%)`,
     mid: `radial-gradient(110% 60% at 20% 30%, #2347C7 0%, #0D2270 50%, #060F33 100%)`,
-    dusk: `linear-gradient(180deg, #08143F 0%, #13308F 58%, #1F44C2 74%, #0A1A55 75%, #071338 100%)`,
+    dusk: `radial-gradient(90% 55% at 50% 42%, #2A4FCB 0%, #102878 50%, #060F33 100%)`,
     alert: `repeating-linear-gradient(135deg, #FFC72C 0 70px, #FFB800 70px 140px)`,
   };
-  const beam = (f * 3) % 2600 - 700;
+  const spot = (x, ang, col, w) => (
+    <div style={{position: 'absolute', left: x - w / 2, top: -120, width: w, height: 2300, transformOrigin: '50% 0', transform: `rotate(${ang}deg)`,
+      clipPath: 'polygon(46% 0, 54% 0, 100% 100%, 0 100%)', background: `linear-gradient(180deg, ${col}, rgba(255,255,255,0) 75%)`, mixBlendMode: 'screen'}} />
+  );
   return (
     <AbsoluteFill style={{background: bgs[tone], overflow: 'hidden'}}>
-      {tone !== 'alert' && <div style={{position: 'absolute', top: -400, left: beam, width: 260, height: 3000, transform: 'rotate(28deg)',
-        background: 'linear-gradient(90deg, transparent, rgba(110,140,255,.16), transparent)'}} />}
-      {tone !== 'alert' && <div style={{position: 'absolute', top: -400, left: beam - 900, width: 120, height: 3000, transform: 'rotate(28deg)',
-        background: 'linear-gradient(90deg, transparent, rgba(255,199,44,.10), transparent)'}} />}
-      <ShapeField kinds={kinds} seed={seed} opacity={tone === 'alert' ? 0.4 : 0.6} />
+      {tone !== 'alert' && spot(140, -22 + Math.sin(f / 50) * 10, 'rgba(255,214,120,.20)', 700)}
+      {tone !== 'alert' && spot(940, 22 + Math.sin(f / 47 + 2) * 10, 'rgba(160,185,255,.18)', 700)}
+      {tone !== 'alert' && spot(540, Math.sin(f / 60 + 1) * 14, 'rgba(255,230,170,.12)', 520)}
+      <ShapeField kinds={CELEBRATE} seed={seed} n={14} opacity={tone === 'alert' ? 0.4 : 0.55} />
       {children}
     </AbsoluteFill>
   );
 };
 
-/* sea + sun horizon */
-const Horizon = ({y = 1480, sun = 1, sunX = 540}) => {
+/* ceremony stage: curtains, floor light and a laurel wreath */
+const Curtain = ({side}) => {
+  const f = useCurrentFrame();
+  const sway = Math.sin(f / 40) * 6;
+  return (
+    <div style={{position: 'absolute', top: 0, bottom: 0, [side]: 0, width: 150, transform: `skewX(${side === 'left' ? sway * 0.3 : -sway * 0.3}deg)`, transformOrigin: 'top'}}>
+      <div style={{position: 'absolute', inset: 0, background: 'repeating-linear-gradient(90deg, #0A1650 0 28px, #16297A 28px 46px, #0A1650 46px 60px)',
+        boxShadow: `inset ${side === 'left' ? -30 : 30}px 0 40px rgba(0,0,0,.5)`}} />
+      <div style={{position: 'absolute', top: 0, bottom: 0, [side === 'left' ? 'right' : 'left']: 0, width: 8, background: `linear-gradient(180deg, ${C.y}, ${C.y2})`}} />
+      <div style={{position: 'absolute', top: 0, left: 0, right: 0, height: 90, background: `linear-gradient(180deg, #16297A, #0A1650)`, borderBottom: `6px solid ${C.y}`}} />
+    </div>
+  );
+};
+export const Laurel = ({size = 640, p = 1, color = C.y}) => {
+  const leaves = 11;
+  const branch = (dir) => [...Array(leaves)].map((_, i) => {
+    const t = i / (leaves - 1);
+    if (t > p) return null;
+    const a = Math.PI * (0.62 + t * 0.78);
+    const r = size * 0.42;
+    const x = size / 2 + dir * Math.cos(a) * r, y = size / 2 - Math.sin(a) * r * -1;
+    const rot = (dir > 0 ? 180 - (a * 180) / Math.PI : (a * 180) / Math.PI) + dir * 35;
+    return <ellipse key={`${dir}-${i}`} cx={x} cy={y} rx={size * 0.055} ry={size * 0.022} fill={color} transform={`rotate(${rot} ${x} ${y})`} opacity={0.95} />;
+  });
+  return (
+    <svg width={size} height={size} style={{overflow: 'visible'}}>
+      <path d={`M${size / 2} ${size * 0.92} A${size * 0.42} ${size * 0.42} 0 0 1 ${size * 0.13} ${size * 0.3}`} fill="none" stroke={color} strokeWidth={4} strokeDasharray={size * 1.4} strokeDashoffset={size * 1.4 * (1 - p)} />
+      <path d={`M${size / 2} ${size * 0.92} A${size * 0.42} ${size * 0.42} 0 0 0 ${size * 0.87} ${size * 0.3}`} fill="none" stroke={color} strokeWidth={4} strokeDasharray={size * 1.4} strokeDashoffset={size * 1.4 * (1 - p)} />
+      {branch(1)}{branch(-1)}
+    </svg>
+  );
+};
+const Stage = ({y = 1480, glow = 1}) => {
   const f = useCurrentFrame();
   return (
     <>
-      <div style={{position: 'absolute', left: sunX - 190, top: y - 190 * sun, width: 380, height: 380, borderRadius: '50%',
-        background: 'radial-gradient(circle, #FFE08A 0%, #FFC72C 60%, rgba(255,199,44,0) 72%)'}} />
-      <div style={{position: 'absolute', left: sunX - 500, top: y - 420, width: 1000, height: 700, borderRadius: '50%',
-        background: 'radial-gradient(closest-side, rgba(255,199,44,.22), transparent)'}} />
-      <div style={{position: 'absolute', left: 0, right: 0, top: y, bottom: 0, background: 'linear-gradient(180deg, #1A3BAA, #081650)'}}>
-        <svg width={1080} height={500} style={{position: 'absolute', top: 0}}>
-          {[...Array(9)].map((_, i) => (
-            <path key={i} d={`M-100 ${30 + i * 48} ${[...Array(14)].map((__, k) => `q 50 ${k % 2 ? 10 : -10} 100 0`).join(' ')}`}
-              transform={`translate(${((f * (1 + i * 0.25)) % 200) - 200},0)`} fill="none" stroke="rgba(160,185,255,.22)" strokeWidth="2" />
-          ))}
-          {[...Array(7)].map((_, i) => (
-            <rect key={'r' + i} x={sunX - 110 + Math.sin(f / 9 + i) * 18} y={22 + i * 34} width={220 - i * 22} height={6} rx={3} fill="rgba(255,220,130,.55)" />
-          ))}
-        </svg>
+      <div style={{position: 'absolute', left: 540 - 520, top: y - 560, width: 1040, height: 900, borderRadius: '50%',
+        background: 'radial-gradient(closest-side, rgba(255,205,110,.28), rgba(255,199,44,0))', opacity: glow}} />
+      <div style={{position: 'absolute', left: -100, right: -100, top: y, bottom: 0, background: 'linear-gradient(180deg, #13297A, #050C2A 80%)', borderTop: `4px solid ${C.y}`}}>
+        <div style={{position: 'absolute', left: 540 + 100 - 420, top: -70, width: 840, height: 160, borderRadius: '50%',
+          background: 'radial-gradient(closest-side, rgba(255,226,150,.55), rgba(255,199,44,0))', opacity: glow}} />
+        {[...Array(9)].map((_, i) => (
+          <div key={i} style={{position: 'absolute', top: 40 + i * 44, left: 0, right: 0, height: 2, background: `rgba(255,214,120,${0.12 - i * 0.012})`}} />
+        ))}
       </div>
+      {[...Array(14)].map((_, i) => {
+        const tw = 0.4 + 0.6 * Math.abs(Math.sin(f / 7 + i * 1.3));
+        return <div key={i} style={{position: 'absolute', top: y - 14, left: 30 + i * 75, width: 14, height: 14, borderRadius: 7, background: '#FFE7A8',
+          boxShadow: `0 0 ${14 * tw}px ${4 * tw}px rgba(255,214,120,${0.6 * tw})`, opacity: 0.5 + tw * 0.5}} />;
+      })}
+      <Curtain side="left" /><Curtain side="right" />
     </>
   );
 };
@@ -107,14 +142,15 @@ export const S1 = () => {
   const tassel = Math.sin(f / 9) * 14 * Math.exp(-Math.max(0, f - 40) / 60);
   return (
     <Base kinds={['diamond', 'ring']} seed={11} tone="dusk">
-      <Horizon y={1480} sun={lin(f, 0, 60, 0.2, 1)} />
-      <div style={{position: 'absolute', top: 210, left: 60, right: 60, display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+      <Stage y={1500} glow={lin(f, 0, 50)} />
+      <div style={{position: 'absolute', left: 540 - 330, top: 700}}><Laurel size={660} p={lin(f, 24, 80, 0, 1, inout)} /></div>
+      <div style={{position: 'absolute', top: 210, left: 170, right: 170, display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
         <Words text="يوم العلم" delay={6} variant="drop" size={170} style={{justifyContent: 'center'}} />
-        <Words text="2026" delay={16} variant="zoom" size={150} color={C.y} style={{justifyContent: 'center'}} />
-        <div style={{height: 10, width: 220 * lin(f, 30, 50), background: `linear-gradient(90deg, ${C.y}, ${C.y2})`, borderRadius: 10, margin: '14px 0 22px'}} />
-        <Words text="تكريم أبناء البريديين الناجحين" delay={34} variant="mask" size={62} weight={700} color={C.mute} stagger={3} style={{justifyContent: 'center'}} />
+        <div style={{height: 10, width: 220 * lin(f, 24, 44), background: `linear-gradient(90deg, ${C.y}, ${C.y2})`, borderRadius: 10, margin: '6px 0 22px'}} />
+        <Words text="تكريم أبناء البريديين" delay={20} variant="rise" size={72} color={C.y} stagger={4} style={{justifyContent: 'center'}} />
+        <Words text="الناجحين" delay={30} variant="rise" size={72} color={C.y} style={{justifyContent: 'center'}} />
       </div>
-      <div style={{position: 'absolute', left: 540 - 230, top: 820 + (1 - drop) * -700 + Math.sin(f / 18) * 10,
+      <div style={{position: 'absolute', left: 540 - 230, top: 860 + (1 - drop) * -700 + Math.sin(f / 18) * 10,
         transform: `rotate(${(1 - drop) * -40 + Math.sin(f / 30) * 3}deg)`, filter: 'drop-shadow(0 30px 40px rgba(0,0,20,.5))'}}>
         <Cap size={460} tassel={tassel} />
       </div>
@@ -171,7 +207,7 @@ export const S3 = () => {
   const shine = lin(f, 40, 90, -0.6, 1.6);
   return (
     <Base kinds={['hex', 'plus']} seed={33} tone="deep" glow={[50, 40]}>
-      <Title l1="البريد التونسي" l2="يكرّم أبناءه" delay={0} variant="rise" size={116} sub="بمناسبة الاحتفال بيوم العلم 2026" />
+      <Title l1="البريد التونسي" l2="يكرّم أبناءه" delay={0} variant="rise" size={116} sub="بمناسبة الاحتفال بيوم العلم" />
       <In delay={20} from="down" dist={300} style={{position: 'absolute', left: 540 - 150, top: 690}}>
         <div style={{position: 'relative'}}>
           <Medal size={300} swing={swing} />
@@ -214,7 +250,7 @@ export const S4 = () => {
           </div>
           <div style={{padding: '32px 40px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', opacity: lin(f, 76, 90)}}>
             <div>
-              <div style={T({fontSize: 50, fontWeight: 900})}>يوم العلم 2026</div>
+              <div style={T({fontSize: 50, fontWeight: 900})}>يوم العلم</div>
               <div style={T({fontSize: 36, fontWeight: 700, color: C.mute})}>تسجيل أبناء البريديين الناجحين</div>
             </div>
             <div style={{padding: '18px 36px', borderRadius: 20, background: C.y}}><span style={T({fontSize: 42, fontWeight: 900, color: C.navy})}>تسجيل</span></div>
@@ -257,12 +293,12 @@ export const S5 = () => {
     <Base kinds={['ring', 'tri']} seed={55} tone="deep" glow={[50, 50]}>
       <Title l1="آجال" l2="التسجيل" delay={0} variant="mask" />
       <div style={{position: 'absolute', top: 640, left: 70, right: 70, display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-        <In delay={16} from="right"><DateTile day="01" month="جويلية 2026" label="من يوم" /></In>
+        <In delay={16} from="right"><DateTile day="01" month="جويلية" label="من يوم" /></In>
         <svg width={120} height={60} style={{opacity: lin(f, 40, 50), transform: 'scaleX(-1)'}}>
           <line x1={10} y1={30} x2={10 + 90 * lin(f, 40, 56)} y2={30} stroke={C.y} strokeWidth={8} strokeLinecap="round" />
           <path d="M84 12 L106 30 L84 48" fill="none" stroke={C.y} strokeWidth={8} strokeLinecap="round" strokeLinejoin="round" opacity={lin(f, 54, 58)} />
         </svg>
-        <In delay={40} from="left"><DateTile day="31" month="جويلية 2026" label="إلى غاية" hot /></In>
+        <In delay={40} from="left"><DateTile day="31" month="جويلية" label="إلى غاية" hot /></In>
       </div>
       <In delay={56} from="up" style={{position: 'absolute', top: 1160, left: 70, right: 70}}>
         <Card style={{padding: '36px 40px'}}>
@@ -416,7 +452,7 @@ export const S8 = () => {
 /* ============ S9 باختصار ============ */
 export const S9 = () => {
   const f = useCurrentFrame();
-  const items = ['ادخل إلى المنظومة', 'سجّل ابنك أو ابنتك', 'حمّل الوثائق المطلوبة', 'قبل 31 جويلية 2026'];
+  const items = ['ادخل إلى المنظومة', 'سجّل ابنك أو ابنتك', 'حمّل الوثائق المطلوبة', 'قبل 31 جويلية'];
   const D = items.map((_, i) => 24 + i * 30);
   return (
     <Base kinds={['diamond', 'cube']} seed={99} tone="mid">
@@ -450,7 +486,8 @@ export const S10 = () => {
   const spin = useSp(16, {damping: 18, stiffness: 40});
   return (
     <Base kinds={['diamond', 'ring']} seed={111} tone="dusk">
-      <Horizon y={1680} sun={lin(f, 0, 80, 0.3, 1)} />
+      <Stage y={1700} glow={lin(f, 0, 40)} />
+      <div style={{position: 'absolute', left: 540 - 250, top: 395, opacity: s}}><Laurel size={500} p={lin(f, 20, 70, 0, 1, inout)} /></div>
       <Confetti start={10} n={50} cx={540} cy={600} />
       <div style={{position: 'absolute', top: 130, left: 60, right: 60, display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
         <Words text="مبروك لأبنائنا" delay={4} variant="drop" size={116} style={{justifyContent: 'center'}} />
@@ -465,7 +502,7 @@ export const S10 = () => {
           <div style={{padding: 12, borderRadius: 20, background: '#fff', flexShrink: 0}}><Img src={staticFile('qr.png')} style={{width: 220, height: 220, display: 'block'}} /></div>
           <div style={{minWidth: 0}}>
             <div style={T({fontSize: 50, fontWeight: 900})}>سجّل الآن</div>
-            <div style={T({fontSize: 38, fontWeight: 700, color: C.mute, marginBottom: 12})}>من 01 إلى 31 جويلية 2026</div>
+            <div style={T({fontSize: 38, fontWeight: 700, color: C.mute, marginBottom: 12})}>من 01 إلى 31 جويلية</div>
             <div style={{direction: 'ltr', fontFamily: 'monospace', fontSize: 28, color: C.y, lineHeight: 1.4, textAlign: 'right'}}>postelearning.poste.tn<br />/social/journee_savoir</div>
           </div>
         </Card>
@@ -487,7 +524,7 @@ export const S10 = () => {
   );
 };
 
-/* ============ S7b جوائز 2026 ============ */
+/* ============ S7b الجوائز ============ */
 const PRIZES = [
   ['مناظرة الدخول للمدارس الإعدادية النموذجية', '', 200],
   ['مناظرة الدخول للمعاهد الثانوية النموذجية', '', 200],
@@ -504,7 +541,7 @@ export const SPrize = () => {
   const f = useCurrentFrame();
   return (
     <Base kinds={['diamond', 'ring']} seed={121} tone="mid">
-      <Title l1="جوائز يوم العلم" l2="2026" delay={0} variant="drop" size={110} top={150} sub="جائزة موحّدة لكل شهادة" />
+      <Title l1="جوائز" l2="يوم العلم" delay={0} variant="drop" size={110} top={150} sub="جائزة موحّدة لكل شهادة" />
       <div style={{position: 'absolute', top: 640, left: 40, right: 40, display: 'flex', flexDirection: 'column', gap: 14}}>
         {PRIZES.map(([name, years, amount], i) => {
           const d = 18 + i * 9;

@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "start": "remotion studio src/index.jsx",
-    "render": "remotion render src/index.jsx Main out/youm-el-ilm-2026.mp4 --crf=18"
+    "render": "remotion render src/index.jsx Main out/youm-el-ilm.mp4 --crf=18"
   },
   "dependencies": {
     "@remotion/cli": "4.0.536",
