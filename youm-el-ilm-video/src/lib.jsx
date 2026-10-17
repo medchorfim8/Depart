@@ -2,9 +2,9 @@ import React from 'react';
 import {useCurrentFrame, useVideoConfig, interpolate, spring, Easing, random, staticFile, Img} from 'remotion';
 
 export const C = {
-  navy: '#071338', navy2: '#0B1E5B', royal: '#1F44C2', blue: '#6E8BFF',
-  y: '#FFC72C', y2: '#FFB000', w: '#FFFFFF', mute: '#AFC0F2', red: '#E5372F',
-  card: 'rgba(14,30,92,0.78)', line: 'rgba(130,160,255,0.28)',
+  navy: '#0B1E5B', navy2: '#14298A', royal: '#1F44C2', blue: '#4F6FE8',
+  y: '#FFC72C', y2: '#FFB000', w: '#FFFFFF', ink: '#0B1E5B', mute: '#5B6B9A', gold: '#C98A00', red: '#E5372F',
+  card: 'rgba(255,255,255,0.88)', line: 'rgba(31,68,194,0.14)',
 };
 export const FONT = 'Tajawal, sans-serif';
 
@@ -21,7 +21,7 @@ export const lin = (f, a, b, from = 0, to = 1, e = ease) =>
   interpolate(f, [a, b], [from, to], {...clamp, easing: e});
 
 /* ---------------- animated words ---------------- */
-export const Words = ({text, delay = 0, variant = 'rise', color = C.w, size = 120, weight = 900, stagger = 4, style = {}}) => {
+export const Words = ({text, delay = 0, variant = 'rise', color = C.ink, size = 120, weight = 900, stagger = 4, style = {}}) => {
   const f = useCurrentFrame();
   const {fps} = useVideoConfig();
   const words = text.split(' ');
@@ -41,7 +41,7 @@ export const Words = ({text, delay = 0, variant = 'rise', color = C.w, size = 12
         return (
           <span key={i} style={{display: 'inline-block', color, fontSize: size, fontWeight: weight, lineHeight: 1.18,
             fontFamily: FONT, transform: t, opacity: o, filter: filt, clipPath: clip, transformOrigin: 'center bottom',
-            textShadow: '0 8px 30px rgba(0,0,0,0.35)'}}>{w}</span>
+            textShadow: '0 6px 26px rgba(31,68,194,0.18)'}}>{w}</span>
         );
       })}
     </div>
@@ -56,7 +56,7 @@ export const Title = ({l1, l2, delay = 0, variant = 'rise', top = 170, size = 12
   return (
     <div style={{position: 'absolute', top, right: 80, left: 80, display: 'flex', flexDirection: 'column', alignItems: just}}>
       {l1 && <Words text={l1} delay={delay} variant={variant} size={size} style={{justifyContent: just}} />}
-      {l2 && <Words text={l2} delay={delay + 7} variant={variant} size={size} color={C.y} style={{justifyContent: just}} />}
+      {l2 && <Words text={l2} delay={delay + 7} variant={variant} size={size} color={C.royal} style={{justifyContent: just}} />}
       <div style={{height: 10, width: 170 * bar, background: `linear-gradient(90deg, ${C.y}, ${C.y2})`, borderRadius: 10, marginTop: 18}} />
       {sub && <div style={{marginTop: 22, opacity: lin(f, delay + 18, delay + 34), transform: `translateY(${(1 - lin(f, delay + 18, delay + 34)) * 20}px)`}}>
         <Words text={sub} delay={delay + 18} variant="mask" size={56} weight={700} color={subColor} stagger={3} style={{justifyContent: just}} />
@@ -67,7 +67,7 @@ export const Title = ({l1, l2, delay = 0, variant = 'rise', top = 170, size = 12
 
 /* ---------------- card ---------------- */
 export const Card = ({children, style = {}, glow = false}) => (
-  <div style={{background: C.card, border: `2px solid ${C.line}`, borderRadius: 38, boxShadow: glow ? `0 0 60px rgba(255,199,44,.25), 0 30px 80px rgba(0,0,20,.5)` : '0 30px 80px rgba(0,0,20,.45)', ...style}}>{children}</div>
+  <div style={{background: C.card, border: `2px solid ${glow ? 'rgba(255,199,44,.7)' : C.line}`, borderRadius: 38, backdropFilter: 'blur(6px)', boxShadow: glow ? `0 0 0 6px rgba(255,199,44,.18), 0 26px 60px rgba(201,138,0,.22)` : '0 24px 60px rgba(31,68,194,.16)', ...style}}>{children}</div>
 );
 
 /* entrance wrapper for elements */

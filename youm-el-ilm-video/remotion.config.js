@@ -9,4 +9,8 @@ Config.setOverwriteOutput(true);
 const CLOUD_HEADLESS_SHELL = '/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell';
 if (process.env.CLAUDE_CODE_REMOTE && fs.existsSync(CLOUD_HEADLESS_SHELL)) {
   Config.setBrowserExecutable(CLOUD_HEADLESS_SHELL);
+  // software WebGL for the three.js scenes (no GPU in the cloud container)
+  Config.setChromiumOpenGlRenderer('swangle');
+} else {
+  Config.setChromiumOpenGlRenderer('angle');
 }

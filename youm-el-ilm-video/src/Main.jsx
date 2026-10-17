@@ -90,10 +90,10 @@ const Progress = () => {
   const p = f / TOTAL;
   const show = lin(f, 176, 196) * (1 - lin(f, cuts[cuts.length - 2], cuts[cuts.length - 2] + 16));
   return (
-    <div style={{position: 'absolute', bottom: 70, left: 120, right: 120, height: 8, borderRadius: 4, background: 'rgba(255,255,255,.15)', opacity: show, direction: 'ltr'}}>
+    <div style={{position: 'absolute', bottom: 70, left: 120, right: 120, height: 8, borderRadius: 4, background: 'rgba(31,68,194,.14)', opacity: show, direction: 'ltr'}}>
       <div style={{position: 'absolute', right: 0, top: 0, bottom: 0, width: `${p * 100}%`, borderRadius: 4, background: `linear-gradient(270deg, ${C.y}, ${C.y2})`, boxShadow: `0 0 14px ${C.y}`}} />
       {cuts.slice(1, -1).map((c) => <div key={c} style={{position: 'absolute', right: `${(c / TOTAL) * 100}%`, top: -5, width: 18, height: 18, marginRight: -9, borderRadius: 9,
-        background: f >= c ? C.y : '#2A3C80', border: '3px solid #0A1A55'}} />)}
+        background: f >= c ? C.y : '#C9D6FF', border: '3px solid #FFFFFF'}} />)}
     </div>
   );
 };
@@ -110,7 +110,7 @@ const Badge = () => {
 };
 
 export const Main = () => (
-  <AbsoluteFill style={{background: C.navy, direction: 'rtl'}}>
+  <AbsoluteFill style={{background: '#F4F8FF', direction: 'rtl'}}>
     <Fonts />
     <SfxTrack />
     <Audio src={staticFile('music.wav')} loop volume={(fr) => musicLevel(fr) * interpolate(fr, [0, 15, TOTAL - 60, TOTAL], [0, 1, 1, 0], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'})} />

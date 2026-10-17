@@ -5,7 +5,7 @@ import {C, lin} from './lib';
 /* slow falling gold confetti and twinkling sparkles: ceremony atmosphere */
 export const Bokeh = ({n = 26}) => {
   const f = useCurrentFrame();
-  const cols = ['#FFC72C', '#FFE08A', '#FFFFFF', '#9DB2FF'];
+  const cols = ['#FFC72C', '#1F44C2', '#FF6F91', '#2EC4B6', '#6E8BFF'];
   return (
     <AbsoluteFill style={{pointerEvents: 'none'}}>
       <svg width={1080} height={1920} style={{position: 'absolute', inset: 0}}>
@@ -24,7 +24,7 @@ export const Bokeh = ({n = 26}) => {
           const tw = Math.max(0, Math.sin(f / (14 + r('t') * 16) + r('o') * 6));
           const x = r('x') * 1080, y = r('y') * 1700, h = 10 + r('s') * 18;
           return <path key={'t' + i} d={`M${x},${y - h} Q${x + h * 0.12},${y - h * 0.12} ${x + h},${y} Q${x + h * 0.12},${y + h * 0.12} ${x},${y + h} Q${x - h * 0.12},${y + h * 0.12} ${x - h},${y} Q${x - h * 0.12},${y - h * 0.12} ${x},${y - h} Z`}
-            fill="#FFF3C4" opacity={tw * 0.8} />;
+            fill="#FFC72C" opacity={tw * 0.75} />;
         })}
       </svg>
     </AbsoluteFill>
@@ -38,7 +38,7 @@ export const SeaFooter = ({from, to}) => {
   if (show <= 0) return null;
   return (
     <div style={{position: 'absolute', left: 0, right: 0, bottom: 0, height: 260, opacity: show, pointerEvents: 'none'}}>
-      <div style={{position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(5,12,42,0) 0%, rgba(5,12,42,.6) 55%, rgba(4,10,34,.92) 100%)'}} />
+      <div style={{position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,.55) 60%, rgba(255,255,255,.85) 100%)'}} />
       <div style={{position: 'absolute', left: 90, right: 90, top: 70, height: 120, borderRadius: '50%', background: 'radial-gradient(closest-side, rgba(255,214,120,.20), rgba(255,199,44,0))'}} />
       {[...Array(16)].map((_, i) => {
         const tw = 0.35 + 0.65 * Math.abs(Math.sin(f / 9 + i * 0.9));
@@ -55,8 +55,8 @@ export const Grade = () => {
   return (
     <AbsoluteFill style={{pointerEvents: 'none'}}>
       <AbsoluteFill style={{background: 'radial-gradient(90% 45% at 85% 0%, rgba(255,190,90,.10), rgba(255,190,90,0) 70%)', mixBlendMode: 'screen'}} />
-      <AbsoluteFill style={{background: 'radial-gradient(120% 85% at 50% 45%, rgba(0,0,0,0) 60%, rgba(0,0,18,.42) 100%)'}} />
-      <svg width={1080} height={1920} style={{position: 'absolute', inset: 0, opacity: 0.07, mixBlendMode: 'overlay'}}>
+      <AbsoluteFill style={{background: 'radial-gradient(120% 85% at 50% 45%, rgba(0,0,0,0) 65%, rgba(31,68,194,.16) 100%)'}} />
+      <svg width={1080} height={1920} style={{position: 'absolute', inset: 0, opacity: 0.04, mixBlendMode: 'overlay'}}>
         <filter id="grain"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed={f % 12} /></filter>
         <rect width="1080" height="1920" filter="url(#grain)" />
       </svg>
