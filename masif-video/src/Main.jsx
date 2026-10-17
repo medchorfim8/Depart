@@ -9,6 +9,21 @@ const comps = [S.S1, S.S2, S.S3, S.S4, S.S5, S.S6, S.S7, S.S8, S.S9, S.S10, S.S1
 const trans = ['none', 'circle', 'diag', 'blinds', 'diamond', 'zoom', 'split', 'flip', 'circle2', 'blindsV', 'diag2', 'slideUp', 'diamond', 'zoom', 'blinds', 'circle'];
 const TD = 18;
 
+/* a different sound for each page change, plus a few accents inside scenes */
+const sfx = [
+  [176, 'whoosh', 0.35], [321, 'chime-soft', 0.3], [594, 'paper-quick', 0.4], [885, 'pop', 0.35],
+  [1062, 'whoosh-low', 0.4], [1308, 'swish', 0.32], [1488, 'paper', 0.4], [1719, 'whoosh', 0.32],
+  [1959, 'paper-quick', 0.38], [2157, 'swish', 0.3], [2451, 'impact', 0.42], [2673, 'swoosh-up', 0.32],
+  [2877, 'whoosh-low', 0.38], [3096, 'pop', 0.35], [3300, 'shimmer', 0.3],
+  [20, 'riser', 0.22], [58, 'chime', 0.28],
+  [2451 + 70, 'stamp', 0.5], [2877 + 48, 'stamp', 0.5], [3300 + 62, 'chime-soft', 0.22],
+];
+const SfxTrack = () => sfx.map(([at, name, vol]) => (
+  <Sequence key={`${at}-${name}`} from={Math.max(0, at - 3)} durationInFrames={60} layout="none">
+    <Audio src={staticFile(`sfx/${name}.wav`)} volume={vol} />
+  </Sequence>
+));
+
 const strips = (n, p, vertical) => {
   const pts = [];
   for (let i = 0; i < n; i++) {
@@ -92,6 +107,7 @@ const Badge = () => {
 export const Main = () => (
   <AbsoluteFill style={{background: C.navy, direction: 'rtl'}}>
     <Fonts />
+    <SfxTrack />
     <Audio src={staticFile('audio.m4a')} volume={(fr) => interpolate(fr, [0, 6, 3570, 3600], [0, 1, 1, 0], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'})} />
     {comps.map((Comp, i) => {
       const from = cuts[i];

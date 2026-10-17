@@ -1,5 +1,6 @@
 import React from 'react';
 import {AbsoluteFill, useCurrentFrame, interpolate, staticFile, Img, random} from 'remotion';
+import {Logo3D} from './logo3d';
 import {C, FONT, lin, ease, inout, useSp, Words, Title, Card, In, ShapeField, DotGrid, Logo, Person, Check, clamp} from './lib';
 
 const T = (s, st = {}) => ({fontFamily: FONT, color: C.w, ...st, ...s});
@@ -651,37 +652,35 @@ export const S15 = () => {
 };
 
 /* ============ S16 OUTRO ============ */
-const Cube = ({size = 380, rx = -18, ry = 0}) => {
-  const h = size / 2;
-  const face = (t, bg) => <div style={{position: 'absolute', width: size, height: size, transform: t, backfaceVisibility: 'hidden',
-    background: bg || `url(${staticFile('logo.png')}) center/cover`, boxShadow: 'inset 0 0 0 3px rgba(0,0,0,.06)'}} />;
-  return (
-    <div style={{width: size, height: size, transformStyle: 'preserve-3d', transform: `rotateX(${rx}deg) rotateY(${ry}deg)`}}>
-      {face(`translateZ(${h}px)`)}{face(`rotateY(90deg) translateZ(${h}px)`)}{face(`rotateY(180deg) translateZ(${h}px)`)}{face(`rotateY(-90deg) translateZ(${h}px)`)}
-      {face(`rotateX(90deg) translateZ(${h}px)`, `linear-gradient(135deg, ${C.y}, ${C.y2})`)}{face(`rotateX(-90deg) translateZ(${h}px)`, C.y2)}
-    </div>
-  );
-};
 export const S16 = () => {
   const f = useCurrentFrame();
   const s = useSp(20, {damping: 12, stiffness: 70});
+  const spin = useSp(20, {damping: 18, stiffness: 40});
+  const ry = (1 - spin) * -540 + Math.sin(f / 40) * 28;
+  const bob = Math.sin(f / 20) * 14;
   return (
-    <Base kinds={['cube', 'ring', 'diamond']} seed={171} tone="dusk">
+    <Base kinds={['diamond', 'ring']} seed={171} tone="dusk">
       <Horizon y={1420} sun={lin(f, 0, 80, 0.3, 1)} />
       <div style={{position: 'absolute', top: 150, left: 60, right: 60, display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
         <Words text="تمتّع" delay={4} variant="drop" size={124} style={{justifyContent: 'center'}} />
         <Words text="بمصيف العائلات" delay={12} variant="drop" size={124} style={{justifyContent: 'center'}} />
         <Words text="مع البريد التونسي" delay={24} variant="mask" size={74} color={C.y} style={{justifyContent: 'center', marginTop: 8}} />
       </div>
-      <div style={{position: 'absolute', left: 540 - 190, top: 780 + Math.sin(f / 20) * 14, width: 380, height: 380, perspective: 1600,
+      <div style={{position: 'absolute', left: 540 - 300, top: 1215, width: 600, height: 70, borderRadius: '50%',
+        background: 'radial-gradient(closest-side, rgba(0,0,10,.55), rgba(0,0,10,0))', transform: `scale(${s * (1 - bob / 140)})`}} />
+      <div style={{position: 'absolute', left: 540 - 330, top: 640, width: 660, height: 660, borderRadius: '50%',
+        background: 'radial-gradient(closest-side, rgba(255,199,44,.35), rgba(255,199,44,0))', opacity: s}} />
+      <div style={{position: 'absolute', left: 540 - 220, top: 740 + bob, width: 440, height: 440, perspective: 1800,
         transform: `scale(${s}) translateY(${(1 - s) * 400}px)`}}>
-        <Cube ry={-35 + f * 0.9} rx={-16} />
+        <Logo3D size={440} depth={48} ry={ry} rx={-8 + Math.sin(f / 33) * 5} />
       </div>
       {[0, 1, 2].map((i) => {
         const a = f / 35 + (i * Math.PI * 2) / 3;
         const z = Math.sin(a);
-        return <div key={i} style={{position: 'absolute', left: 540 - 55 + Math.cos(a) * 330, top: 970 - 55 + z * 70, width: 110, height: 110, perspective: 800,
-          zIndex: z > 0 ? 2 : 0, opacity: lin(f, 40 + i * 6, 56 + i * 6), transform: `scale(${0.75 + z * 0.25})`}}><Cube size={110} ry={f * 2 + i * 40} rx={f + i * 20} /></div>;
+        return <div key={i} style={{position: 'absolute', left: 540 - 55 + Math.cos(a) * 330, top: 960 - 55 + z * 210, width: 110, height: 110, perspective: 800,
+          zIndex: z > 0 ? 2 : 0, opacity: lin(f, 40 + i * 6, 56 + i * 6), transform: `scale(${0.75 + z * 0.25})`}}>
+          <Logo3D size={110} depth={16} layers={10} ry={f * 2.4 + i * 60} rx={Math.sin(f / 25 + i) * 20} shine={i / 3} />
+        </div>;
       })}
       <In delay={60} from="scale" style={{position: 'absolute', top: 1270, left: 0, right: 0, display: 'flex', justifyContent: 'center'}}>
         <span style={T({fontSize: 100, fontWeight: 900, textShadow: '0 10px 30px rgba(0,0,0,.5)'})}>مصيف العائلات</span>
