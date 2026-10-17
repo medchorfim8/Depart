@@ -3,9 +3,8 @@ import {AbsoluteFill, Sequence, Audio, staticFile, useCurrentFrame, delayRender,
 import {C, lin, inout, Logo} from './lib';
 import * as S from './scenes';
 import {Bokeh, SeaFooter, Grade} from './finish';
-import voice from './voice.json';
+import {cuts, voice} from './timeline';
 
-const cuts = [0, 180, 345, 525, 735, 915, 1155, 1425, 1710, 1875, 2055, 2310];
 const TOTAL = cuts[cuts.length - 1];
 const comps = [S.S1, S.S2, S.S3, S.S4, S.S5, S.S6, S.S7, S.SPrize, S.S8, S.S9, S.S10];
 const trans = ['none', 'circle', 'diag', 'blinds', 'diamond', 'zoom', 'split', 'blindsV', 'slideUp', 'flip', 'circle2'];
@@ -18,12 +17,12 @@ const musicLevel = (fr) => {
   return 0.32 - 0.2 * duck;
 };
 
-/* a different sound for each page change, plus a few accents inside scenes */
+/* a different sound for each page change, plus a few accents inside scenes: [scene, frames into it, sound, volume] */
 const sfx = [
-  [180, 'whoosh', 0.35], [345, 'chime-soft', 0.3], [525, 'swish', 0.32], [735, 'pop', 0.35], [915, 'paper', 0.4],
-  [1155, 'shimmer', 0.3], [1425, 'swoosh-up', 0.32], [1710, 'impact', 0.42], [1875, 'paper-quick', 0.38], [2055, 'whoosh-low', 0.38],
-  [10, 'riser', 0.22], [52, 'chime', 0.28], [180 + 30, 'pop', 0.3], [1425 + 120, 'chime-soft', 0.22], [2055 + 26, 'shimmer', 0.25],
-];
+  [1, 0, 'whoosh', 0.35], [2, 0, 'chime-soft', 0.3], [3, 0, 'swish', 0.32], [4, 0, 'pop', 0.35], [5, 0, 'paper', 0.4],
+  [6, 0, 'shimmer', 0.3], [7, 0, 'swoosh-up', 0.32], [8, 0, 'impact', 0.42], [9, 0, 'paper-quick', 0.38], [10, 0, 'whoosh-low', 0.38],
+  [0, 10, 'riser', 0.22], [0, 52, 'chime', 0.28], [1, 30, 'pop', 0.3], [7, 120, 'chime-soft', 0.22], [10, 26, 'shimmer', 0.25],
+].map(([scene, off, name, vol]) => [cuts[scene] + off, name, vol]);
 const SfxTrack = () => sfx.map(([at, name, vol]) => (
   <Sequence key={`${at}-${name}`} from={Math.max(0, at - 3)} durationInFrames={60} layout="none">
     <Audio src={staticFile(`sfx/${name}.wav`)} volume={vol} />
@@ -114,7 +113,7 @@ export const Main = () => (
   <AbsoluteFill style={{background: C.navy, direction: 'rtl'}}>
     <Fonts />
     <SfxTrack />
-    <Audio src={staticFile('music.wav')} volume={(fr) => musicLevel(fr) * interpolate(fr, [0, 15, TOTAL - 60, TOTAL], [0, 1, 1, 0], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'})} />
+    <Audio src={staticFile('music.wav')} loop volume={(fr) => musicLevel(fr) * interpolate(fr, [0, 15, TOTAL - 60, TOTAL], [0, 1, 1, 0], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'})} />
     {voice.map((v) => (
       <Sequence key={v.file} from={v.from} durationInFrames={v.frames} layout="none">
         <Audio src={staticFile(v.file)} volume={1} />
