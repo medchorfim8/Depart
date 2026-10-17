@@ -20,6 +20,6 @@
 ## التعليق الصوتي (على الهاتف أو أي جهاز فيه إنترنت)
     apt install -y python3-venv
     python3 -m venv ~/tts && ~/tts/bin/pip install edge-tts mutagen
-    ~/tts/bin/python scripts/make_voice.py            # صوت تونسي رجالي ar-TN-HediNeural
+    ~/tts/bin/python scripts/make_voice.py            # صوت رجالي إماراتي ar-AE-HamdanNeural
 النصوص في scripts/voice_lines.json. السكربت يولّد public/voice/01.mp3 ... 11.mp3 ويكتب src/voice.json،
 والفيديو يشغّل كل جملة في مشهدها ويخفض الموسيقى أثناء الكلام.

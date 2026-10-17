@@ -5,7 +5,7 @@ sped up slightly (at most --max-boost percent) if it overruns its scene; when
 that is not enough the scene itself is lengthened, so the voice stays natural.
 
     python3 -m venv ~/tts && ~/tts/bin/pip install edge-tts mutagen
-    ~/tts/bin/python scripts/make_voice.py                    # Tunisian male voice
+    ~/tts/bin/python scripts/make_voice.py                    # Emirati male voice (chosen for this video)
     ~/tts/bin/python scripts/make_voice.py --voice ar-TN-ReemNeural   # female
 
 Edit the sentences in scripts/voice_lines.json, then run the script again.
@@ -30,7 +30,7 @@ async def synth(text, voice, rate, pitch, out):
 
 async def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument('--voice', default='ar-TN-HediNeural')
+    ap.add_argument('--voice', default='ar-AE-HamdanNeural')
     ap.add_argument('--rate', type=int, default=0, help='base speed in percent, e.g. -5 or 10')
     ap.add_argument('--pitch', default='+0Hz')
     ap.add_argument('--max-boost', type=int, default=15, help='most a sentence may be sped up, in percent')
