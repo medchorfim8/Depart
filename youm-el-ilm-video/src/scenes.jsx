@@ -486,3 +486,49 @@ export const S10 = () => {
     </Base>
   );
 };
+
+/* ============ S7b جوائز 2026 ============ */
+const PRIZES = [
+  ['مناظرة الدخول للمدارس الإعدادية النموذجية', '', 200],
+  ['مناظرة الدخول للمعاهد الثانوية النموذجية', '', 200],
+  ['البكالوريا + مؤهل التقني المهني BTP', 'باك', 250],
+  ['ختم الدروس الجامعية + مؤهل تقني سامي BTS', 'باك + 3', 300],
+  ['الماجستير + الشهادة الوطنية لمهندس', 'باك + 5', 350],
+  ['المناظرة الوطنية للإقامة في الطب', 'باك + 5', 350],
+  ['طب الأسنان — طبيب بيطري — الصيدلة', 'باك + 6', 400],
+  ['الدكتوراه في البحث العلمي', 'باك + 8', 450],
+  ['الدكتوراه الوطنية في طب العائلة', 'باك + 8', 450],
+  ['الدكتوراه الوطنية في طب الاختصاص', 'باك + 10 وما فوق', 500],
+];
+export const SPrize = () => {
+  const f = useCurrentFrame();
+  return (
+    <Base kinds={['diamond', 'ring']} seed={121} tone="mid">
+      <Title l1="جوائز يوم العلم" l2="2026" delay={0} variant="drop" size={110} top={150} sub="جائزة موحّدة لكل شهادة" />
+      <div style={{position: 'absolute', top: 640, left: 40, right: 40, display: 'flex', flexDirection: 'column', gap: 14}}>
+        {PRIZES.map(([name, years, amount], i) => {
+          const d = 18 + i * 9;
+          const top = i === PRIZES.length - 1;
+          const p = lin(f, d, d + 26, 0, 1, inout);
+          const val = Math.round(lin(f, d, d + 26, 0, amount, inout) / 10) * 10;
+          return (
+            <div key={i} style={{display: 'flex', alignItems: 'center', gap: 16, padding: '0 20px', borderRadius: 20, height: 86,
+              background: top ? 'rgba(255,199,44,.16)' : C.card, border: `2px solid ${top ? C.y : C.line}`,
+              opacity: lin(f, d - 6, d + 4), transform: `translateX(${(1 - lin(f, d - 6, d + 10)) * 120}px)`,
+              boxShadow: top ? `0 0 ${30 + Math.sin(f / 6) * 14}px rgba(255,199,44,.4)` : 'none'}}>
+              <div style={T({width: 590, flexShrink: 0, fontSize: 28, fontWeight: 900, whiteSpace: 'nowrap'})}>{name}</div>
+              <div style={{flex: 1, position: 'relative', height: 34, display: 'flex', alignItems: 'center'}}>
+                <div style={{position: 'absolute', left: 0, right: 0, height: 16, borderRadius: 8, background: 'rgba(255,255,255,.08)', overflow: 'hidden'}}>
+                  <div style={{position: 'absolute', right: 0, top: 0, bottom: 0, width: `${(amount / 500) * 100 * p}%`, borderRadius: 8,
+                    background: top ? `linear-gradient(270deg, ${C.y}, ${C.y2})` : `linear-gradient(270deg, ${C.blue}, ${C.royal})`}} />
+                </div>
+                {years && <span style={T({position: 'absolute', top: -26, right: 0, fontSize: 21, fontWeight: 700, color: C.mute, whiteSpace: 'nowrap'})}>{years}</span>}
+              </div>
+              <div style={T({width: 112, flexShrink: 0, textAlign: 'left', fontSize: 40, fontWeight: 900, color: top ? C.y : C.w})}>{val} د</div>
+            </div>
+          );
+        })}
+      </div>
+    </Base>
+  );
+};

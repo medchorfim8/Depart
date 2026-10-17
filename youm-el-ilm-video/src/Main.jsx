@@ -4,17 +4,17 @@ import {C, lin, inout, Logo} from './lib';
 import * as S from './scenes';
 import {Bokeh, SeaFooter, Grade} from './finish';
 
-const cuts = [0, 180, 345, 525, 735, 915, 1155, 1425, 1590, 1770, 2025];
+const cuts = [0, 180, 345, 525, 735, 915, 1155, 1425, 1710, 1875, 2055, 2310];
 const TOTAL = cuts[cuts.length - 1];
-const comps = [S.S1, S.S2, S.S3, S.S4, S.S5, S.S6, S.S7, S.S8, S.S9, S.S10];
-const trans = ['none', 'circle', 'diag', 'blinds', 'diamond', 'zoom', 'split', 'slideUp', 'flip', 'circle2'];
+const comps = [S.S1, S.S2, S.S3, S.S4, S.S5, S.S6, S.S7, S.SPrize, S.S8, S.S9, S.S10];
+const trans = ['none', 'circle', 'diag', 'blinds', 'diamond', 'zoom', 'split', 'blindsV', 'slideUp', 'flip', 'circle2'];
 const TD = 18;
 
 /* a different sound for each page change, plus a few accents inside scenes */
 const sfx = [
   [180, 'whoosh', 0.35], [345, 'chime-soft', 0.3], [525, 'swish', 0.32], [735, 'pop', 0.35], [915, 'paper', 0.4],
-  [1155, 'shimmer', 0.3], [1425, 'impact', 0.42], [1590, 'paper-quick', 0.38], [1770, 'whoosh-low', 0.38],
-  [10, 'riser', 0.22], [52, 'chime', 0.28], [180 + 30, 'pop', 0.3], [1770 + 26, 'shimmer', 0.25],
+  [1155, 'shimmer', 0.3], [1425, 'swoosh-up', 0.32], [1710, 'impact', 0.42], [1875, 'paper-quick', 0.38], [2055, 'whoosh-low', 0.38],
+  [10, 'riser', 0.22], [52, 'chime', 0.28], [180 + 30, 'pop', 0.3], [1425 + 120, 'chime-soft', 0.22], [2055 + 26, 'shimmer', 0.25],
 ];
 const SfxTrack = () => sfx.map(([at, name, vol]) => (
   <Sequence key={`${at}-${name}`} from={Math.max(0, at - 3)} durationInFrames={60} layout="none">
