@@ -3,12 +3,20 @@ import {AbsoluteFill, Sequence, Audio, staticFile, useCurrentFrame, delayRender,
 import {C, lin, inout, Logo} from './lib';
 import * as S from './scenes';
 import {Bokeh, SeaFooter, Grade} from './finish';
+import voice from './voice.json';
 
 const cuts = [0, 180, 345, 525, 735, 915, 1155, 1425, 1710, 1875, 2055, 2310];
 const TOTAL = cuts[cuts.length - 1];
 const comps = [S.S1, S.S2, S.S3, S.S4, S.S5, S.S6, S.S7, S.SPrize, S.S8, S.S9, S.S10];
 const trans = ['none', 'circle', 'diag', 'blinds', 'diamond', 'zoom', 'split', 'blindsV', 'slideUp', 'flip', 'circle2'];
 const TD = 18;
+
+/* music sits lower while the narrator speaks (src/voice.json is written by scripts/make_voice.py) */
+const musicLevel = (fr) => {
+  if (!voice.length) return 0.55;
+  const duck = Math.max(0, ...voice.map((v) => interpolate(fr, [v.from - 8, v.from, v.from + v.frames, v.from + v.frames + 10], [0, 1, 1, 0], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'})));
+  return 0.32 - 0.2 * duck;
+};
 
 /* a different sound for each page change, plus a few accents inside scenes */
 const sfx = [
@@ -106,7 +114,12 @@ export const Main = () => (
   <AbsoluteFill style={{background: C.navy, direction: 'rtl'}}>
     <Fonts />
     <SfxTrack />
-    <Audio src={staticFile('music.wav')} volume={(fr) => interpolate(fr, [0, 15, TOTAL - 60, TOTAL], [0, 0.55, 0.55, 0], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'})} />
+    <Audio src={staticFile('music.wav')} volume={(fr) => musicLevel(fr) * interpolate(fr, [0, 15, TOTAL - 60, TOTAL], [0, 1, 1, 0], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'})} />
+    {voice.map((v) => (
+      <Sequence key={v.file} from={v.from} durationInFrames={v.frames} layout="none">
+        <Audio src={staticFile(v.file)} volume={1} />
+      </Sequence>
+    ))}
     {comps.map((Comp, i) => {
       const from = cuts[i];
       const dur = cuts[i + 1] - cuts[i] + TD + 2;

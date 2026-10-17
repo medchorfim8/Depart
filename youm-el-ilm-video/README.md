@@ -16,3 +16,10 @@
 - public/qr.png  : رمز الاستجابة السريعة للرابط https://www.postelearning.poste.tn/social/journee_savoir
 - public/music.wav : موسيقى خلفية مولّدة بـ `python3 scripts/make_music.py 77`
 - public/sfx/    : مؤثرات الانتقال، مولّدة بـ `python3 scripts/make_sfx.py`
+
+## التعليق الصوتي (على الهاتف أو أي جهاز فيه إنترنت)
+    apt install -y python3-venv
+    python3 -m venv ~/tts && ~/tts/bin/pip install edge-tts mutagen
+    ~/tts/bin/python scripts/make_voice.py            # صوت تونسي رجالي ar-TN-HediNeural
+النصوص في scripts/voice_lines.json. السكربت يولّد public/voice/01.mp3 ... 11.mp3 ويكتب src/voice.json،
+والفيديو يشغّل كل جملة في مشهدها ويخفض الموسيقى أثناء الكلام.
