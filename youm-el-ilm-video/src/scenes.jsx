@@ -2,7 +2,8 @@ import React from 'react';
 import {AbsoluteFill, useCurrentFrame, staticFile, Img, random, interpolate} from 'remotion';
 import {C, FONT, lin, inout, useSp, Words, Title, Card, In, ShapeField, Check} from './lib';
 import {Logo3D} from './logo3d';
-import {Stage3D, Trophy, Medal, Coin, Star, Confetti3D, CapToss, useEntry} from './three';
+import {Stage3D, Coin, Confetti3D, CapToss, useEntry} from './three';
+import {GlowBG, LightRing, Reveal, GlowBox, GlowEmblem, Certificate} from './glow';
 
 const T = (s, st = {}) => ({fontFamily: FONT, color: C.ink, ...st, ...s});
 const CELEBRATE = ['star', 'cap', 'book', 'spark', 'star'];
@@ -88,30 +89,25 @@ const Gauge = ({p, size = 250}) => {
   );
 };
 
-/* ============ S1 INTRO ============ */
+/* ============ S1 INTRO: glowing light ring, emblem, typed prompt ============ */
 export const S1 = () => {
   const f = useCurrentFrame();
-  const s = useEntry(14, {damping: 11, stiffness: 70});
+  const ring = lin(f, 0, 40, 0, 1, inout);
+  const em = useEntry(8, {damping: 12, stiffness: 80});
   return (
-    <Base seed={11} tone="sun" center={[540, 1220]}>
-      <div style={{position: 'absolute', left: 540 - 400, top: 840}}><Laurel size={800} p={lin(f, 30, 90, 0, 1, inout)} /></div>
-      <div style={{position: 'absolute', left: 540 - 420, top: 1530, width: 840, height: 120, borderRadius: '50%', background: 'radial-gradient(closest-side, rgba(201,138,0,.35), rgba(201,138,0,0))', opacity: s}} />
-      <Stage3D>
-        <Trophy scale={0.78 * s} position={[0, -0.95 - (1 - s) * 2, 0]} rotY={(1 - s) * 4 + f * 0.025} />
-        {[0, 1, 2, 3, 4].map((i) => {
-          const a = f * 0.035 + (i * Math.PI * 2) / 5;
-          return <Star key={i} scale={0.42 * lin(f, 30 + i * 4, 50 + i * 4)} position={[Math.cos(a) * 1.3, -0.55 + Math.sin(a * 2) * 0.3, Math.sin(a) * 1.0]} rotation={[0, f * 0.06 + i, 0]} />;
-        })}
-        <Confetti3D start={40} n={70} burst />
-        <Confetti3D start={20} n={40} />
-      </Stage3D>
-      <div style={{position: 'absolute', top: 190, left: 60, right: 60, display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-        <Words text="يوم العِلم" delay={4} variant="drop" size={180} style={{justifyContent: 'center'}} />
-        <div style={{height: 12, width: 260 * lin(f, 22, 42), background: `linear-gradient(90deg, ${C.y}, ${C.y2})`, borderRadius: 10, margin: '6px 0 24px'}} />
-        <Words text="تكريم أبناء البريديين" delay={20} variant="rise" size={74} color={C.royal} stagger={4} style={{justifyContent: 'center'}} />
-        <Words text="الناجحين" delay={30} variant="pop" size={96} color={C.gold} style={{justifyContent: 'center'}} />
+    <GlowBG>
+      <LightRing cx={540} cy={560} size={640} p={ring} />
+      <div style={{position: 'absolute', left: 540 - 140, top: 560 - 140}}><GlowEmblem size={280} p={em} /></div>
+      <div style={{position: 'absolute', top: 930, left: 60, right: 60, display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+        <Reveal start={22} dur={26}>
+          <div style={{fontFamily: FONT, fontSize: 170, fontWeight: 900, color: '#fff', lineHeight: 1.15, textShadow: '0 0 40px rgba(255,199,44,.55)'}}>يوم العِلم</div>
+        </Reveal>
+        <div style={{height: 8, width: 260 * lin(f, 40, 60), background: `linear-gradient(90deg, rgba(255,199,44,0), ${C.y}, rgba(255,199,44,0))`, borderRadius: 8, margin: '6px 0 40px', boxShadow: '0 0 20px #FFC72C'}} />
       </div>
-    </Base>
+      <div style={{position: 'absolute', top: 1260, left: 0, right: 0, display: 'flex', justifyContent: 'center'}}>
+        <GlowBox text="تكريم أبناء البريديين الناجحين" start={52} cps={1.6} width={920} />
+      </div>
+    </GlowBG>
   );
 };
 
@@ -145,17 +141,13 @@ export const S2 = () => {
   );
 };
 
-/* ============ S3 البريد يكرّمهم ============ */
+/* ============ S3 البريد يكرّمهم: the certificate ============ */
 export const S3 = () => {
-  const f = useCurrentFrame();
-  const s = useEntry(12, {damping: 10, stiffness: 70});
   return (
     <Base seed={33} tone="sun" center={[540, 1000]}>
       <Title l1="البريد التونسي" l2="يكرّم أبناءه" delay={0} variant="rise" size={116} sub="بمناسبة الاحتفال بيوم العِلم" />
-      <Stage3D>
-        <Medal scale={0.82 * s} position={[0, -0.75 + (1 - s) * -3, 0]} swing={Math.sin(f / 14) * 0.18 * Math.exp(-f / 90)} rotY={Math.sin(f / 22) * 0.6} />
-        <Confetti3D start={0} n={40} />
-      </Stage3D>
+      <Stage3D><Confetti3D start={30} n={50} /></Stage3D>
+      <div style={{position: 'absolute', top: 700, left: 80}}><Certificate start={10} width={920} /></div>
       <In delay={70} from="up" style={{position: 'absolute', top: 1430, left: 70, right: 70}}>
         <Card style={{padding: '36px 44px', display: 'flex', alignItems: 'center', gap: 26}}>
           <svg width={86} height={86} viewBox="0 0 24 24" style={{flexShrink: 0}}><rect x="2" y="4" width="20" height="14" rx="2" fill="none" stroke={C.royal} strokeWidth="1.6" />
@@ -490,43 +482,45 @@ export const S9 = () => {
   );
 };
 
-/* ============ S10 OUTRO ============ */
+/* ============ S10 OUTRO on the glowing stage ============ */
 export const S10 = () => {
   const f = useCurrentFrame();
   const s = useSp(16, {damping: 12, stiffness: 70});
   const spin = useSp(16, {damping: 18, stiffness: 40});
   return (
-    <Base seed={111} tone="sun" center={[540, 620]}>
+    <GlowBG intensity={0.9}>
       <Fireworks bursts={[
-        {at: 8, x: 220, y: 420, color: C.y}, {at: 22, x: 860, y: 360, color: C.royal}, {at: 40, x: 540, y: 250, color: '#FF6F91'},
-        {at: 70, x: 180, y: 700, color: '#2EC4B6'}, {at: 92, x: 900, y: 650, color: C.y2}, {at: 130, x: 540, y: 300, color: C.blue},
+        {at: 8, x: 200, y: 330, color: C.y}, {at: 22, x: 880, y: 300, color: '#9DB2FF'}, {at: 40, x: 540, y: 200, color: '#FFE08A'},
+        {at: 70, x: 170, y: 720, color: C.y2}, {at: 92, x: 910, y: 700, color: '#6E8BFF'}, {at: 130, x: 540, y: 240, color: C.y},
       ]} />
-      <Stage3D><Confetti3D start={0} n={70} /></Stage3D>
-      <div style={{position: 'absolute', top: 130, left: 60, right: 60, display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-        <Words text="مبروك لأبنائنا" delay={4} variant="drop" size={116} style={{justifyContent: 'center'}} />
-        <Words text="الناجحين" delay={12} variant="pop" size={124} color={C.gold} style={{justifyContent: 'center'}} />
+      <LightRing cx={540} cy={620} size={520} p={s} />
+      <div style={{position: 'absolute', top: 120, left: 60, right: 60, display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+        <Reveal start={4} dur={22}><div style={{fontFamily: FONT, fontSize: 112, fontWeight: 900, color: '#fff', textShadow: '0 0 30px rgba(255,199,44,.5)'}}>مبروك لأبنائنا</div></Reveal>
+        <Reveal start={14} dur={22}><div style={{fontFamily: FONT, fontSize: 120, fontWeight: 900, color: C.y, textShadow: '0 0 40px rgba(255,199,44,.7)'}}>الناجحين</div></Reveal>
       </div>
-      <div style={{position: 'absolute', left: 540 - 250, top: 395, opacity: s}}><Laurel size={500} p={lin(f, 20, 70, 0, 1, inout)} /></div>
       <div style={{position: 'absolute', left: 540 - 150, top: 470 + Math.sin(f / 20) * 10, width: 300, height: 300, perspective: 1600,
         transform: `scale(${s}) translateY(${(1 - s) * 300}px)`}}>
         <Logo3D size={300} depth={36} ry={(1 - spin) * -540 + Math.sin(f / 40) * 28} rx={-8 + Math.sin(f / 33) * 5} />
       </div>
-      <In delay={50} from="up" style={{position: 'absolute', top: 880, left: 60, right: 60}}>
-        <Card glow style={{padding: '30px 34px', display: 'flex', alignItems: 'center', gap: 30}}>
-          <div style={{padding: 12, borderRadius: 20, background: '#fff', border: `2px solid ${C.line}`, flexShrink: 0}}><Img src={staticFile('qr.png')} style={{width: 220, height: 220, display: 'block'}} /></div>
-          <div style={{minWidth: 0}}>
-            <div style={T({fontSize: 50, fontWeight: 900})}>سجّل الآن</div>
-            <div style={T({fontSize: 38, fontWeight: 700, color: C.mute, marginBottom: 12})}>من 01 إلى 31 جويلية</div>
-            <div style={{direction: 'ltr', fontFamily: 'monospace', fontSize: 28, color: C.royal, lineHeight: 1.4, textAlign: 'right'}}>postelearning.poste.tn<br />/social/journee_savoir</div>
+      <In delay={50} from="up" style={{position: 'absolute', top: 920, left: 60, right: 60}}>
+        <div style={{position: 'relative'}}>
+          <div style={{position: 'absolute', inset: -3, borderRadius: 40, background: `conic-gradient(from ${f * 3}deg, #FFC72C, #1F44C2, #FFB000, #4F6FE8, #FFC72C)`, filter: 'blur(10px)', opacity: 0.8}} />
+          <div style={{position: 'relative', borderRadius: 38, background: 'linear-gradient(180deg, #0D1B52, #071338)', border: '2px solid rgba(255,199,44,.6)', padding: '30px 34px', display: 'flex', alignItems: 'center', gap: 30}}>
+            <div style={{padding: 12, borderRadius: 20, background: '#fff', flexShrink: 0}}><Img src={staticFile('qr.png')} style={{width: 220, height: 220, display: 'block'}} /></div>
+            <div style={{minWidth: 0}}>
+              <div style={T({fontSize: 50, fontWeight: 900, color: '#fff'})}>سجّل الآن</div>
+              <div style={T({fontSize: 38, fontWeight: 700, color: '#C9D6FF', marginBottom: 12})}>من 01 إلى 31 جويلية</div>
+              <div style={{direction: 'ltr', fontFamily: 'monospace', fontSize: 28, color: C.y, lineHeight: 1.4, textAlign: 'right'}}>postelearning.poste.tn<br />/social/journee_savoir</div>
+            </div>
           </div>
-        </Card>
+        </div>
       </In>
-      <In delay={80} from="up" style={{position: 'absolute', top: 1260, left: 40, right: 40, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 24, padding: '30px 20px', borderRadius: 36, background: C.navy, boxShadow: '0 24px 60px rgba(11,30,91,.35)'}}>
+      <In delay={80} from="up" style={{position: 'absolute', top: 1300, left: 40, right: 40, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 24, padding: '30px 20px', borderRadius: 36, background: 'rgba(255,255,255,.06)', border: '2px solid rgba(157,178,255,.35)'}}>
         <span style={T({fontSize: 42, fontWeight: 700, color: '#C9D6FF'})}>للاستفسار، الاتصال بالسيد <b style={{color: '#fff', fontWeight: 900}}>فوزي جاري</b></span>
         <div style={{display: 'flex', gap: 30}}>
           {['93 667 475', '95 542 040'].map((n, i) => (
             <In key={n} delay={92 + i * 10} from="scale">
-              <div style={{display: 'flex', alignItems: 'center', gap: 16, padding: '20px 34px', borderRadius: 24, background: 'rgba(255,255,255,.08)', border: `2px solid ${C.y}`}}>
+              <div style={{display: 'flex', alignItems: 'center', gap: 16, padding: '20px 34px', borderRadius: 24, background: 'rgba(255,199,44,.08)', border: `2px solid ${C.y}`, boxShadow: '0 0 24px rgba(255,199,44,.3)'}}>
                 <svg width={42} height={42} viewBox="0 0 24 24"><path d="M6.6 10.8a15 15 0 006.6 6.6l2.2-2.2a1 1 0 011-.25 11.4 11.4 0 003.6.6 1 1 0 011 1V20a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.5a1 1 0 011 1c0 1.25.2 2.45.6 3.6a1 1 0 01-.25 1z" fill={C.y} /></svg>
                 <span style={{fontFamily: FONT, fontSize: 56, fontWeight: 900, color: '#fff', direction: 'ltr'}}>{n}</span>
               </div>
@@ -534,6 +528,6 @@ export const S10 = () => {
           ))}
         </div>
       </In>
-    </Base>
+    </GlowBG>
   );
 };
