@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {AbsoluteFill, Sequence, Audio, staticFile, useCurrentFrame, delayRender, continueRender, interpolate} from 'remotion';
 import {C, lin, inout, Logo} from './lib';
 import * as S from './scenes';
+import {Bokeh, SeaFooter, Grade} from './finish';
 
 const cuts = [0, 176, 321, 594, 885, 1062, 1308, 1488, 1719, 1959, 2157, 2451, 2673, 2877, 3096, 3300, 3600];
 const comps = [S.S1, S.S2, S.S3, S.S4, S.S5, S.S6, S.S7, S.S8, S.S9, S.S10, S.S11, S.S12, S.S13, S.S14, S.S15, S.S16];
@@ -91,7 +92,7 @@ const Badge = () => {
 export const Main = () => (
   <AbsoluteFill style={{background: C.navy, direction: 'rtl'}}>
     <Fonts />
-    <Audio src={staticFile('audio.m4a')} />
+    <Audio src={staticFile('audio.m4a')} volume={(fr) => interpolate(fr, [0, 6, 3570, 3600], [0, 1, 1, 0], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'})} />
     {comps.map((Comp, i) => {
       const from = cuts[i];
       const dur = cuts[i + 1] - cuts[i] + TD + 2;
@@ -104,7 +105,10 @@ export const Main = () => (
     {cuts.slice(1, -1).map((c, i) => (
       <Sequence key={'s' + c} from={c} durationInFrames={24} layout="none"><AbsoluteFill style={{pointerEvents: 'none'}}><Sweep kind={i % 4} /></AbsoluteFill></Sequence>
     ))}
+    <Bokeh />
+    <SeaFooter from={176} to={3316} />
     <Badge />
     <Progress />
+    <Grade />
   </AbsoluteFill>
 );

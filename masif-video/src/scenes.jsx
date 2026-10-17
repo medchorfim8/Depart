@@ -20,7 +20,7 @@ export const Base = ({kinds, seed, tone = 'deep', children, glow = [80, 20]}) =>
         background: 'linear-gradient(90deg, transparent, rgba(110,140,255,.16), transparent)'}} />}
       {tone !== 'alert' && <div style={{position: 'absolute', top: -400, left: beam - 900, width: 120, height: 3000, transform: 'rotate(28deg)',
         background: 'linear-gradient(90deg, transparent, rgba(255,199,44,.10), transparent)'}} />}
-      <ShapeField kinds={kinds} seed={seed} opacity={tone === 'alert' ? 0.5 : 1} />
+      <ShapeField kinds={kinds} seed={seed} opacity={tone === 'alert' ? 0.4 : 0.6} />
       {children}
     </AbsoluteFill>
   );
@@ -75,6 +75,8 @@ export const S1 = () => {
                 opacity: lin(f, 0, 10)}} />
             );
           })}
+          {/* once assembled, a single image hides the seams between the tiles */}
+          <div style={{position: 'absolute', inset: 0, backgroundImage: `url(${staticFile('logo.png')})`, backgroundSize: 'cover', opacity: lin(f, 58, 72)}} />
           <div style={{position: 'absolute', inset: 0, overflow: 'hidden', borderRadius: 4, opacity: settle}}>
             <div style={{position: 'absolute', top: -200, left: `${shine * 100}%`, width: 140, height: 1000, transform: 'rotate(25deg)',
               background: 'linear-gradient(90deg, transparent, rgba(255,255,255,.75), transparent)'}} />
@@ -99,8 +101,8 @@ export const S2 = () => {
   const lines = [['لا', 'تقلق', 0, 'slide'], ['لا', 'تحتار', 34, 'pop'], ['ولا', 'تشغل بالك', 70, 'zoom']];
   return (
     <Base kinds={['ring', 'arc']} seed={22} tone="mid">
-      <DotGrid x={80} y={1380} cols={10} rows={6} delay={10} />
-      <div style={{position: 'absolute', top: 560, left: 0, right: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 46}}>
+      <DotGrid x={80} y={1500} cols={10} rows={6} delay={10} />
+      <div style={{position: 'absolute', top: 680, left: 0, right: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 46}}>
         {lines.map(([a, b, d, v], i) => (
           <div key={i} style={{display: 'flex', gap: 30, alignItems: 'center'}}>
             <Words text={a} delay={d} variant={v} size={150} />
@@ -110,13 +112,13 @@ export const S2 = () => {
       </div>
       {lines.map(([, , d], i) => {
         const p = lin(f, d + 4, d + 30);
-        return <div key={i} style={{position: 'absolute', left: 540 - 500 * p, top: 640 + i * 230 - 120 * p, width: 1000 * p, height: 240 * p,
+        return <div key={i} style={{position: 'absolute', left: 540 - 500 * p, top: 760 + i * 230 - 120 * p, width: 1000 * p, height: 240 * p,
           borderRadius: 999, border: `2px solid rgba(255,199,44,${0.5 * (1 - p)})`}} />;
       })}
       <svg width={1080} height={1920} style={{position: 'absolute', inset: 0}}>
-        <circle cx={540} cy={860} r={460} fill="none" stroke={C.y} strokeWidth={4} opacity={0.35}
+        <circle cx={540} cy={980} r={460} fill="none" stroke={C.y} strokeWidth={4} opacity={0.35}
           strokeDasharray={2 * Math.PI * 460} strokeDashoffset={2 * Math.PI * 460 * (1 - lin(f, 0, 120, 0, 1, inout))}
-          transform={`rotate(${-90 + f * 0.3} 540 860)`} />
+          transform={`rotate(${-90 + f * 0.3} 540 980)`} />
       </svg>
     </Base>
   );
@@ -138,22 +140,22 @@ export const S3 = () => {
     <Base kinds={['hex', 'plus']} seed={33} tone="deep" glow={[50, 40]}>
       <svg width={1080} height={1920} style={{position: 'absolute', inset: 0}}>
         {[0, 1, 2].map((i) => (
-          <ellipse key={i} cx={540} cy={920} rx={330 + i * 110} ry={120 + i * 40} fill="none" stroke={i === 1 ? C.y : C.blue}
+          <ellipse key={i} cx={540} cy={1010} rx={330 + i * 110} ry={120 + i * 40} fill="none" stroke={i === 1 ? C.y : C.blue}
             strokeWidth={2.5} opacity={0.35 * lin(f, 50 + i * 8, 80 + i * 8)} strokeDasharray="10 16"
-            transform={`rotate(${-12 + Math.sin(f / 40 + i) * 4} 540 920)`} strokeDashoffset={-f * (2 + i)} />
+            transform={`rotate(${-12 + Math.sin(f / 40 + i) * 4} 540 1010)`} strokeDashoffset={-f * (2 + i)} />
         ))}
       </svg>
-      <In delay={0} from="scale" style={{position: 'absolute', top: 330, left: 0, right: 0, display: 'flex', justifyContent: 'center'}}>
+      <In delay={0} from="scale" style={{position: 'absolute', top: 420, left: 0, right: 0, display: 'flex', justifyContent: 'center'}}>
         <div style={{display: 'flex', alignItems: 'center', gap: 16, padding: '14px 40px', borderRadius: 999, background: 'rgba(255,199,44,.12)', border: `2px solid ${C.y}`}}>
           <Bulb on={on} /><span style={T({fontSize: 64, fontWeight: 900, color: C.y})}>الحلّ؟</span>
         </div>
       </In>
-      <div style={{position: 'absolute', top: 640, left: 60, right: 60, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6}}>
+      <div style={{position: 'absolute', top: 730, left: 60, right: 60, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6}}>
         <Words text="بإمكانك التسجيل في" delay={46} variant="mask" size={72} weight={700} style={{justifyContent: 'center'}} />
         <Words text="منظومة الدعم" delay={62} variant="zoom" size={120} style={{justifyContent: 'center'}} />
         <Words text="لمصيف العائلات" delay={80} variant="rise" size={112} color={C.y} style={{justifyContent: 'center', flexWrap: 'nowrap'}} />
       </div>
-      <In delay={112} from="up" style={{position: 'absolute', top: 1260, left: 0, right: 0, display: 'flex', justifyContent: 'center'}}>
+      <In delay={112} from="up" style={{position: 'absolute', top: 1400, left: 0, right: 0, display: 'flex', justifyContent: 'center'}}>
         <Card style={{padding: '26px 48px', display: 'flex', alignItems: 'center', gap: 20}}>
           <span style={{width: 16, height: 16, borderRadius: 8, background: C.y, boxShadow: `0 0 20px ${C.y}`}} />
           <span style={T({fontSize: 46, fontWeight: 700, color: C.mute})}>بالتعاون مع تعاونية البريد والاتصالات</span>
@@ -182,9 +184,9 @@ export const S4 = () => {
   return (
     <Base kinds={['diamond', 'ring']} seed={44} tone="mid">
       <Title l1="دعم" l2="لإقامتك" delay={0} variant="slide" />
-      <div style={{position: 'absolute', top: 640, left: 70, right: 70, display: 'flex', gap: 34}}>
+      <div style={{position: 'absolute', top: 660, left: 70, right: 70, display: 'flex', gap: 34}}>
         <In delay={24} from="flip" style={{flex: 1}}>
-          <Card glow style={{height: 520, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 10, position: 'relative'}}>
+          <Card glow style={{height: 600, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 10, position: 'relative'}}>
             <div style={{position: 'relative', width: 250, height: 250}}>
               <Gauge p={pct} />
               <div style={T({position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 84, fontWeight: 900, color: C.y, direction: 'ltr'})}>{Math.round(pct * 100)}%</div>
@@ -193,7 +195,7 @@ export const S4 = () => {
           </Card>
         </In>
         <In delay={60} from="flip" style={{flex: 1}}>
-          <Card glow style={{height: 520, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 24}}>
+          <Card glow style={{height: 600, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 24}}>
             <div style={{display: 'flex', alignItems: 'flex-end', gap: 6, height: 150}}>
               {[0.35, 0.55, 0.75, 1].map((h, i) => (
                 <div key={i} style={{width: 40, height: 150 * h * lin(f, 70 + i * 8, 110 + i * 8), borderRadius: 10, background: i === 3 ? C.y : 'rgba(110,139,255,.55)'}} />
@@ -204,7 +206,7 @@ export const S4 = () => {
           </Card>
         </In>
       </div>
-      <In delay={150} from="up" style={{position: 'absolute', top: 1210, left: 70, right: 70}}>
+      <In delay={150} from="up" style={{position: 'absolute', top: 1340, left: 70, right: 70}}>
         <Card style={{padding: '44px 40px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16}}>
           <div style={{display: 'flex', alignItems: 'center', gap: 28}}>
             <span style={T({fontSize: 76, fontWeight: 900})}>01 جوان</span>
@@ -223,7 +225,7 @@ export const S4 = () => {
 export const S5 = () => {
   const f = useCurrentFrame();
   const people = [['العون البريدي', C.y, 230, -230], ['القرين', C.blue, -230, -230], ['الأبناء', C.blue, 230, 230], ['الأم والأب', C.y, -230, 230]];
-  const cx = 540, cy = 1080;
+  const cx = 540, cy = 1170;
   return (
     <Base kinds={['tri', 'plus']} seed={55} tone="deep" glow={[50, 55]}>
       <Title l1="من" l2="يشارك؟" delay={0} variant="pop" />
@@ -388,7 +390,7 @@ export const S9 = () => {
   const D = [30, 80, 140];
   return (
     <Base kinds={['hex', 'diamond']} seed={99} tone="deep" glow={[70, 50]}>
-      <DotGrid x={70} y={1500} cols={9} rows={5} delay={20} />
+      <DotGrid x={70} y={1640} cols={9} rows={3} delay={20} />
       <Title l1="الأولوية" l2="حسب:" delay={0} variant="drop" />
       <svg width={300} height={300} style={{position: 'absolute', left: 60, top: 160}}>
         {[0, 1, 2].map((i) => <rect key={i} x={150 - 40 - i * 30} y={150 - 40 - i * 30} width={80 + i * 60} height={80 + i * 60} rx={18} fill="none"
@@ -397,8 +399,8 @@ export const S9 = () => {
       {items.map((t, i) => {
         const s = useSp(D[i], {damping: 12, stiffness: 110});
         return (
-          <div key={i} style={{position: 'absolute', top: 640 + i * 300, left: 60, right: 60, transform: `translateX(${(1 - s) * (i % 2 ? -700 : 700)}px) rotate(${(1 - s) * (i % 2 ? -6 : 6)}deg)`, opacity: lin(f, D[i], D[i] + 10)}}>
-            <Card style={{height: 240, display: 'flex', alignItems: 'center', gap: 40, padding: '0 50px'}}>
+          <div key={i} style={{position: 'absolute', top: 640 + i * 320, left: 60, right: 60, transform: `translateX(${(1 - s) * (i % 2 ? -700 : 700)}px) rotate(${(1 - s) * (i % 2 ? -6 : 6)}deg)`, opacity: lin(f, D[i], D[i] + 10)}}>
+            <Card style={{height: 270, display: 'flex', alignItems: 'center', gap: 40, padding: '0 50px'}}>
               <span style={{fontFamily: FONT, fontSize: 150, fontWeight: 900, color: 'transparent', WebkitTextStroke: `4px ${C.y}`, lineHeight: 1, width: 90, textAlign: 'center'}}>{i + 1}</span>
               <span style={T({fontSize: 54, fontWeight: 900, lineHeight: 1.4, flex: 1})}>{t}</span>
             </Card>
