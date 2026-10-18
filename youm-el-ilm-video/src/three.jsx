@@ -30,7 +30,7 @@ export const Stage3D = ({children, camZ = 9, fov = 35}) => {
 };
 
 const GOLD = {color: '#FFC23A', metalness: 1, roughness: 0.2, envMapIntensity: 1.3};
-const NAVY = {color: '#16297A', metalness: 0.3, roughness: 0.45};
+const NAVY = {color: '#2A4FCB', metalness: 0.35, roughness: 0.4};
 
 /* trophy cup built from a lathe profile, handles, stem and a two-step base */
 export const Trophy = ({scale = 1, rotY = 0, position = [0, 0, 0]}) => {

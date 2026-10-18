@@ -38,7 +38,7 @@ export const SeaFooter = ({from, to}) => {
   if (show <= 0) return null;
   return (
     <div style={{position: 'absolute', left: 0, right: 0, bottom: 0, height: 260, opacity: show, pointerEvents: 'none'}}>
-      <div style={{position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,.55) 60%, rgba(255,255,255,.85) 100%)'}} />
+      <div style={{position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(2,6,26,0) 0%, rgba(2,6,26,.5) 60%, rgba(2,6,26,.8) 100%)'}} />
       <div style={{position: 'absolute', left: 90, right: 90, top: 70, height: 120, borderRadius: '50%', background: 'radial-gradient(closest-side, rgba(255,214,120,.20), rgba(255,199,44,0))'}} />
       {[...Array(16)].map((_, i) => {
         const tw = 0.35 + 0.65 * Math.abs(Math.sin(f / 9 + i * 0.9));

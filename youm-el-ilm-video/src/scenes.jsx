@@ -8,24 +8,20 @@ import {GlowBG, LightRing, Reveal, GlowBox, GlowEmblem, Certificate} from './glo
 const T = (s, st = {}) => ({fontFamily: FONT, color: C.ink, ...st, ...s});
 const CELEBRATE = ['star', 'cap', 'book', 'spark', 'star'];
 
-/* bright celebration backgrounds: soft sky or warm sunlight, slow rays and floating symbols */
-export const Base = ({seed, tone = 'sky', rays = true, center = [540, 900], children}) => {
+/* every scene sits on the intro/outro stage: navy gradient, drifting gold and blue light,
+   plus a faint slow ray burst and floating graduation symbols */
+export const Base = ({seed, rays = true, center = [540, 900], children}) => {
   const f = useCurrentFrame();
-  const bgs = {
-    sky: 'radial-gradient(120% 75% at 50% 30%, #FFFFFF 0%, #EEF3FF 42%, #C9D9FF 100%)',
-    sun: 'radial-gradient(115% 70% at 50% 32%, #FFFFFF 0%, #FFF7DE 42%, #FFDE94 100%)',
-    alert: 'repeating-linear-gradient(135deg, #FFC72C 0 70px, #FFB800 70px 140px)',
-  };
   return (
-    <AbsoluteFill style={{background: bgs[tone], overflow: 'hidden'}}>
-      {rays && tone !== 'alert' && (
-        <div style={{position: 'absolute', left: center[0] - 1500, top: center[1] - 1500, width: 3000, height: 3000, transform: `rotate(${f * 0.12}deg)`,
-          background: `repeating-conic-gradient(from 0deg, ${tone === 'sun' ? 'rgba(255,190,60,.16)' : 'rgba(110,140,255,.12)'} 0deg 6deg, rgba(255,255,255,0) 6deg 15deg)`,
-          WebkitMaskImage: 'radial-gradient(circle, #000 0%, rgba(0,0,0,.5) 35%, transparent 62%)', maskImage: 'radial-gradient(circle, #000 0%, rgba(0,0,0,.5) 35%, transparent 62%)'}} />
+    <GlowBG>
+      {rays && (
+        <div style={{position: 'absolute', left: center[0] - 1500, top: center[1] - 1500, width: 3000, height: 3000, transform: `rotate(${f * 0.1}deg)`,
+          background: 'repeating-conic-gradient(from 0deg, rgba(255,214,120,.06) 0deg 6deg, rgba(255,255,255,0) 6deg 15deg)',
+          WebkitMaskImage: 'radial-gradient(circle, #000 0%, rgba(0,0,0,.5) 35%, transparent 60%)', maskImage: 'radial-gradient(circle, #000 0%, rgba(0,0,0,.5) 35%, transparent 60%)'}} />
       )}
-      <ShapeField kinds={CELEBRATE} seed={seed} n={12} opacity={tone === 'alert' ? 0.35 : 0.45} />
+      <ShapeField kinds={CELEBRATE} seed={seed} n={12} opacity={0.3} />
       {children}
-    </AbsoluteFill>
+    </GlowBG>
   );
 };
 
@@ -82,7 +78,7 @@ const Gauge = ({p, size = 250}) => {
   const r = size / 2 - 16, L = 2 * Math.PI * r;
   return (
     <svg width={size} height={size}>
-      <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="rgba(31,68,194,.1)" strokeWidth={18} />
+      <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="rgba(255,255,255,.12)" strokeWidth={18} />
       <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke={C.y} strokeWidth={18} strokeLinecap="round"
         strokeDasharray={L} strokeDashoffset={L * (1 - p)} transform={`rotate(-90 ${size / 2} ${size / 2})`} />
     </svg>
@@ -122,7 +118,7 @@ export const S2 = () => {
       </Stage3D>
       <div style={{position: 'absolute', top: 430, left: 60, right: 60, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10}}>
         <Words text="ابنك أو ابنتك" delay={2} variant="slide" size={124} style={{justifyContent: 'center'}} />
-        <Words text="نجح هذا العام؟" delay={14} variant="pop" size={140} color={C.royal} style={{justifyContent: 'center'}} />
+        <Words text="نجح هذا العام؟" delay={14} variant="pop" size={140} color={C.y} style={{justifyContent: 'center'}} />
       </div>
       <In delay={48} from="up" style={{position: 'absolute', top: 950, left: 70, right: 70}}>
         <Card glow style={{padding: '40px 44px', display: 'flex', flexDirection: 'column', gap: 26}}>
@@ -150,10 +146,10 @@ export const S3 = () => {
       <div style={{position: 'absolute', top: 700, left: 80}}><Certificate start={10} width={920} /></div>
       <In delay={70} from="up" style={{position: 'absolute', top: 1430, left: 70, right: 70}}>
         <Card style={{padding: '36px 44px', display: 'flex', alignItems: 'center', gap: 26}}>
-          <svg width={86} height={86} viewBox="0 0 24 24" style={{flexShrink: 0}}><rect x="2" y="4" width="20" height="14" rx="2" fill="none" stroke={C.royal} strokeWidth="1.6" />
-            <path d="M8 21 H16 M12 18 V21" stroke={C.royal} strokeWidth="1.6" strokeLinecap="round" /><path d="M7 11 L10.5 14 L17 8" fill="none" stroke={C.gold} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+          <svg width={86} height={86} viewBox="0 0 24 24" style={{flexShrink: 0}}><rect x="2" y="4" width="20" height="14" rx="2" fill="none" stroke={C.sky} strokeWidth="1.6" />
+            <path d="M8 21 H16 M12 18 V21" stroke={C.sky} strokeWidth="1.6" strokeLinecap="round" /><path d="M7 11 L10.5 14 L17 8" fill="none" stroke={C.gold} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
           <div>
-            <div style={T({fontSize: 56, fontWeight: 900})}>سجّلهم <span style={{color: C.royal}}>عن بعد</span></div>
+            <div style={T({fontSize: 56, fontWeight: 900})}>سجّلهم <span style={{color: C.y}}>عن بعد</span></div>
             <div style={T({fontSize: 40, fontWeight: 700, color: C.mute})}>دعوة لكافة الأعوان المعنيين</div>
           </div>
         </Card>
@@ -175,9 +171,9 @@ export const S4 = () => {
       <Title l1="كيفية" l2="التسجيل" delay={0} variant="slide" sub="وجوبًا عبر المنظومة الإعلامية" />
       <In delay={18} from="flip" style={{position: 'absolute', top: 650, left: 60, right: 60}}>
         <Card style={{overflow: 'hidden'}}>
-          <div style={{display: 'flex', alignItems: 'center', gap: 12, padding: '20px 26px', background: 'rgba(31,68,194,.07)', direction: 'ltr'}}>
+          <div style={{display: 'flex', alignItems: 'center', gap: 12, padding: '20px 26px', background: 'rgba(255,255,255,.06)', direction: 'ltr'}}>
             {['#FF5F57', '#FEBC2E', '#28C840'].map((c) => <span key={c} style={{width: 16, height: 16, borderRadius: 8, background: c, flexShrink: 0}} />)}
-            <span style={{marginLeft: 12, flex: 1, padding: '8px 16px', borderRadius: 12, background: '#fff', border: `2px solid ${C.line}`, fontFamily: 'monospace', fontSize: 27, color: C.ink, whiteSpace: 'nowrap', overflow: 'hidden'}}>
+            <span style={{marginLeft: 12, flex: 1, padding: '8px 16px', borderRadius: 12, background: 'rgba(255,255,255,.08)', border: `2px solid ${C.line}`, fontFamily: 'monospace', fontSize: 27, color: C.ink, whiteSpace: 'nowrap', overflow: 'hidden'}}>
               {typed}{f < 80 && Math.floor(f / 8) % 2 ? '|' : ''}
             </span>
           </div>
@@ -203,8 +199,8 @@ export const S4 = () => {
         </div>
         <div>
           <div style={T({fontSize: 56, fontWeight: 900})}>امسح</div>
-          <div style={T({fontSize: 56, fontWeight: 900, color: C.royal})}>رمز الاستجابة</div>
-          <div style={T({fontSize: 56, fontWeight: 900, color: C.royal})}>السريعة</div>
+          <div style={T({fontSize: 56, fontWeight: 900, color: C.y})}>رمز الاستجابة</div>
+          <div style={T({fontSize: 56, fontWeight: 900, color: C.y})}>السريعة</div>
         </div>
       </div>
     </Base>
@@ -225,12 +221,12 @@ const FlipDay = ({value, color}) => {
   );
 };
 const DateTile = ({day, month, label, hot}) => (
-  <div style={{width: 380, borderRadius: 34, overflow: 'hidden', background: hot ? `linear-gradient(160deg, ${C.y}, ${C.y2})` : '#fff', border: `2px solid ${hot ? C.y : C.line}`,
-    boxShadow: hot ? '0 26px 60px rgba(201,138,0,.35)' : '0 24px 60px rgba(31,68,194,.16)'}}>
+  <div style={{width: 380, borderRadius: 34, overflow: 'hidden', background: hot ? `linear-gradient(160deg, ${C.y}, ${C.y2})` : C.card, border: `2px solid ${hot ? C.y : C.line}`,
+    boxShadow: hot ? '0 26px 60px rgba(201,138,0,.35)' : '0 24px 60px rgba(0,0,10,.45)'}}>
     <div style={{padding: '14px 0', textAlign: 'center', background: hot ? C.navy : C.royal}}><span style={T({fontSize: 38, fontWeight: 700, color: hot ? C.y : C.w})}>{label}</span></div>
     <div style={{padding: '18px 0 26px', textAlign: 'center'}}>
       {day}
-      <div style={T({fontSize: 52, fontWeight: 900, color: C.navy})}>{month}</div>
+      <div style={T({fontSize: 52, fontWeight: 900, color: hot ? C.navy : C.ink})}>{month}</div>
     </div>
   </div>
 );
@@ -242,7 +238,7 @@ export const S5 = () => {
     <Base seed={55} tone="sun" center={[540, 900]}>
       <Title l1="آجال" l2="التسجيل" delay={0} variant="mask" />
       <div style={{position: 'absolute', top: 640, left: 70, right: 70, display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-        <In delay={16} from="right"><DateTile day={<FlipDay value={1} color={C.royal} />} month="جويلية" label="من يوم" /></In>
+        <In delay={16} from="right"><DateTile day={<FlipDay value={1} color={C.y} />} month="جويلية" label="من يوم" /></In>
         <svg width={120} height={60} style={{opacity: lin(f, 40, 50), transform: 'scaleX(-1)'}}>
           <line x1={10} y1={30} x2={10 + 90 * lin(f, 40, 56)} y2={30} stroke={C.gold} strokeWidth={8} strokeLinecap="round" />
           <path d="M84 12 L106 30 L84 48" fill="none" stroke={C.gold} strokeWidth={8} strokeLinecap="round" strokeLinejoin="round" opacity={lin(f, 54, 58)} />
@@ -256,8 +252,8 @@ export const S5 = () => {
               const on = i / 31 < fill;
               const pop = on ? Math.max(0, 1 - Math.abs(i / 31 - fill) * 12) : 0;
               return <div key={i} style={{width: 92, height: 54, borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center',
-                background: on ? (i === 30 ? C.y : 'rgba(255,199,44,.28)') : 'rgba(31,68,194,.06)', border: `2px solid ${on ? C.y : 'transparent'}`, transform: `scale(${1 + pop * 0.15})`}}>
-                <span style={T({fontSize: 30, fontWeight: 700})}>{i + 1}</span>
+                background: on ? (i === 30 ? C.y : 'rgba(255,199,44,.28)') : 'rgba(255,255,255,.06)', border: `2px solid ${on ? C.y : 'transparent'}`, transform: `scale(${1 + pop * 0.15})`}}>
+                <span style={T({fontSize: 30, fontWeight: 700, color: i === 30 && on ? C.navy : C.ink})}>{i + 1}</span>
               </div>;
             })}
           </div>
@@ -284,7 +280,7 @@ export const S6 = () => {
           <div style={{display: 'flex', alignItems: 'center', gap: 36, paddingBottom: 26, borderBottom: `2px solid ${C.line}`, marginBottom: 10}}>
             <div style={{position: 'relative', width: 190, height: 190}}>
               <Gauge p={pct} size={190} />
-              <div style={T({position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 56, fontWeight: 900, color: C.royal, direction: 'ltr'})}>{Math.round(pct * 100)}%</div>
+              <div style={T({position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 56, fontWeight: 900, color: C.y, direction: 'ltr'})}>{Math.round(pct * 100)}%</div>
             </div>
             <div>
               <div style={T({fontSize: 50, fontWeight: 900})}>ملفّ التسجيل</div>
@@ -338,9 +334,9 @@ export const S7 = () => {
         <Bouquet size={220} sway={sway} />
       </In>
       <In delay={30} from="up" style={{position: 'absolute', top: 640, left: 60, right: 60}}>
-        <div style={{display: 'flex', alignItems: 'center', gap: 22, padding: '24px 34px', borderRadius: 28, background: 'rgba(255,255,255,.85)', borderRight: `10px solid ${C.y}`, boxShadow: '0 18px 40px rgba(201,138,0,.18)'}}>
+        <div style={{display: 'flex', alignItems: 'center', gap: 22, padding: '24px 34px', borderRadius: 28, background: C.card, borderRight: `10px solid ${C.y}`, boxShadow: '0 18px 40px rgba(201,138,0,.18)'}}>
           <span style={T({fontSize: 30, fontWeight: 900, color: C.navy, background: C.y, padding: '6px 18px', borderRadius: 12, whiteSpace: 'nowrap'})}>بصفة استثنائية</span>
-          <span style={T({fontSize: 42, fontWeight: 700, lineHeight: 1.4})}>تهنئة مبكرة بإهدائهم <b style={{color: C.royal}}>باقات زهور البريد</b></span>
+          <span style={T({fontSize: 42, fontWeight: 700, lineHeight: 1.4})}>تهنئة مبكرة بإهدائهم <b style={{color: C.y}}>باقات زهور البريد</b></span>
         </div>
       </In>
       {[
@@ -353,7 +349,7 @@ export const S7 = () => {
               <span style={T({fontSize: 56, fontWeight: 900, color: C.navy})}>{i + 1}</span>
             </div>
             <div style={{flex: 1}}>
-              <div style={T({fontSize: 52, fontWeight: 900, color: C.royal})}>{h}</div>
+              <div style={T({fontSize: 52, fontWeight: 900, color: C.y})}>{h}</div>
               <div style={T({fontSize: 42, fontWeight: 700, lineHeight: 1.45})}>
                 {body} {site && <span style={{direction: 'ltr', unicodeBidi: 'isolate', color: C.gold, fontWeight: 900}}>{site}</span>}
               </div>
@@ -402,18 +398,18 @@ export const SPrize = () => {
           const val = Math.round(lin(f, d, d + 26, 0, amount, inout) / 10) * 10;
           return (
             <div key={i} style={{display: 'flex', alignItems: 'center', gap: 16, padding: '0 20px', borderRadius: 20, height: 86,
-              background: top ? `linear-gradient(90deg, ${C.y}, #FFE08A)` : 'rgba(255,255,255,.9)', border: `2px solid ${top ? C.y2 : C.line}`,
+              background: top ? `linear-gradient(90deg, ${C.y}, #FFE08A)` : C.card, border: `2px solid ${top ? C.y2 : C.line}`,
               opacity: lin(f, d - 6, d + 4), transform: `translateX(${(1 - lin(f, d - 6, d + 10)) * 120}px) scale(${top ? 1 + Math.max(0, Math.sin((f - 140) / 8)) * 0.02 * (f > 140 ? 1 : 0) : 1})`,
-              boxShadow: top ? '0 16px 40px rgba(201,138,0,.4)' : '0 10px 24px rgba(31,68,194,.10)'}}>
-              <div style={T({width: 590, flexShrink: 0, fontSize: 28, fontWeight: 900, whiteSpace: 'nowrap'})}>{name}</div>
+              boxShadow: top ? '0 16px 40px rgba(201,138,0,.4)' : '0 10px 24px rgba(0,0,10,.35)'}}>
+              <div style={T({width: 590, flexShrink: 0, fontSize: 28, fontWeight: 900, whiteSpace: 'nowrap', color: top ? C.navy : C.ink})}>{name}</div>
               <div style={{flex: 1, position: 'relative', height: 34, display: 'flex', alignItems: 'center'}}>
-                <div style={{position: 'absolute', left: 0, right: 0, height: 16, borderRadius: 8, background: top ? 'rgba(11,30,91,.12)' : 'rgba(31,68,194,.08)', overflow: 'hidden'}}>
+                <div style={{position: 'absolute', left: 0, right: 0, height: 16, borderRadius: 8, background: top ? 'rgba(11,30,91,.12)' : 'rgba(255,255,255,.1)', overflow: 'hidden'}}>
                   <div style={{position: 'absolute', right: 0, top: 0, bottom: 0, width: `${(amount / 500) * 100 * p}%`, borderRadius: 8,
-                    background: top ? `linear-gradient(270deg, ${C.navy}, ${C.royal})` : `linear-gradient(270deg, ${C.royal}, ${C.blue})`}} />
+                    background: top ? `linear-gradient(270deg, ${C.navy}, ${C.royal})` : `linear-gradient(270deg, ${C.blue}, ${C.sky})`}} />
                 </div>
                 {years && <span style={T({position: 'absolute', top: -26, right: 0, fontSize: 21, fontWeight: 700, color: top ? C.navy : C.mute, whiteSpace: 'nowrap'})}>{years}</span>}
               </div>
-              <div style={T({width: 112, flexShrink: 0, textAlign: 'left', fontSize: 40, fontWeight: 900, color: top ? C.navy : C.royal})}>{val} د</div>
+              <div style={T({width: 112, flexShrink: 0, textAlign: 'left', fontSize: 40, fontWeight: 900, color: top ? C.navy : C.y})}>{val} د</div>
             </div>
           );
         })}
@@ -427,23 +423,23 @@ export const S8 = () => {
   const f = useCurrentFrame();
   const shake = f > 34 && f < 54 ? Math.sin(f * 2.2) * 14 * (1 - (f - 34) / 20) : 0;
   return (
-    <Base seed={88} tone="alert">
+    <Base seed={88} rays={false}>
       <div style={{position: 'absolute', top: 220, left: 0, right: 0, display: 'flex', justifyContent: 'center', transform: `rotate(${shake * 0.3}deg) translateX(${shake}px)`}}>
         <In delay={0} from="scale">
-          <svg width={240} height={220} viewBox="0 0 60 55"><path d="M30 3 L57 52 H3 Z" fill={C.navy} stroke={C.navy} strokeWidth="3" strokeLinejoin="round" />
-            <rect x="27.5" y="18" width="5" height="19" rx="2.5" fill={C.y} /><circle cx="30" cy="44" r="3.2" fill={C.y} /></svg>
+          <svg width={240} height={220} viewBox="0 0 60 55"><path d="M30 3 L57 52 H3 Z" fill={C.y} stroke={C.y} strokeWidth="3" strokeLinejoin="round" />
+            <rect x="27.5" y="18" width="5" height="19" rx="2.5" fill={C.navy} /><circle cx="30" cy="44" r="3.2" fill={C.navy} /></svg>
         </In>
       </div>
       <In delay={12} from="down" style={{position: 'absolute', top: 470, left: 0, right: 0, display: 'flex', justifyContent: 'center'}}>
         <span style={T({fontSize: 60, fontWeight: 900, color: '#fff', background: C.red, padding: '6px 44px', borderRadius: 18})}>هام!</span>
       </In>
       <div style={{position: 'absolute', top: 640, left: 60, right: 60, display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-        <Words text="التسجيل وجوبًا" delay={22} variant="slide" size={124} color={C.navy} style={{justifyContent: 'center'}} />
-        <Words text="عن بعد" delay={34} variant="slide" size={124} color={C.navy} style={{justifyContent: 'center'}} />
-        <Words text="واحترم الإجراءات والآجال" delay={48} variant="mask" size={70} color={C.navy} style={{justifyContent: 'center', marginTop: 16}} />
+        <Words text="التسجيل وجوبًا" delay={22} variant="slide" size={124} color={C.ink} style={{justifyContent: 'center'}} />
+        <Words text="عن بعد" delay={34} variant="slide" size={124} color={C.y} style={{justifyContent: 'center'}} />
+        <Words text="واحترم الإجراءات والآجال" delay={48} variant="mask" size={70} color={C.mute} style={{justifyContent: 'center', marginTop: 16}} />
       </div>
       <In delay={90} from="up" style={{position: 'absolute', top: 1260, left: 70, right: 70}}>
-        <div style={{background: C.navy, borderRadius: 36, padding: '40px 46px', boxShadow: '0 30px 60px rgba(0,0,0,.25)', display: 'flex', gap: 26, alignItems: 'center'}}>
+        <div style={{background: C.card, border: `2px solid ${C.y}`, borderRadius: 36, padding: '40px 46px', boxShadow: '0 0 40px rgba(255,199,44,.25)', display: 'flex', gap: 26, alignItems: 'center'}}>
           <svg width={74} height={74} viewBox="0 0 24 24" style={{flexShrink: 0}}><path d="M3 11 L17 5 V19 L3 13 Z" fill={C.y} /><rect x="17" y="8" width="4" height="8" rx="1.5" fill={C.y} /><path d="M6 13.5 L8 19 H11 L9.5 14.5" fill={C.y} /></svg>
           <span style={T({fontSize: 46, fontWeight: 700, lineHeight: 1.5, color: '#fff'})}>المسؤولون مدعوّون إلى إعلام منظوريهم بفحوى هذه المذكّرة</span>
         </div>
@@ -468,12 +464,12 @@ export const S9 = () => {
         const s = useSp(D[i], {damping: 11, stiffness: 150});
         return (
           <div key={i} style={{position: 'absolute', top: 580 + i * 250, left: 100, right: 100, transform: `scale(${s}) translateY(${(1 - s) * 40}px)`, opacity: lin(f, D[i], D[i] + 8)}}>
-            <div style={{height: 190, borderRadius: 999, background: last ? `linear-gradient(135deg, ${C.y}, ${C.y2})` : 'rgba(255,255,255,.92)', border: `2px solid ${last ? C.y2 : C.line}`, display: 'flex', alignItems: 'center', gap: 30, padding: '0 40px',
-              boxShadow: last ? `0 0 ${40 + Math.sin(f / 6) * 20}px rgba(255,199,44,.7)` : '0 20px 50px rgba(31,68,194,.14)'}}>
+            <div style={{height: 190, borderRadius: 999, background: last ? `linear-gradient(135deg, ${C.y}, ${C.y2})` : C.card, border: `2px solid ${last ? C.y2 : C.line}`, display: 'flex', alignItems: 'center', gap: 30, padding: '0 40px',
+              boxShadow: last ? `0 0 ${40 + Math.sin(f / 6) * 20}px rgba(255,199,44,.7)` : '0 20px 50px rgba(0,0,10,.4)'}}>
               <div style={{width: 116, height: 116, borderRadius: 58, background: last ? C.navy : `linear-gradient(135deg, ${C.y}, ${C.y2})`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0}}>
                 <span style={T({fontSize: 64, fontWeight: 900, color: last ? C.y : C.navy})}>{i + 1}</span>
               </div>
-              <span style={T({fontSize: 60, fontWeight: 900})}>{t}</span>
+              <span style={T({fontSize: 60, fontWeight: 900, color: last ? C.navy : C.ink})}>{t}</span>
             </div>
           </div>
         );

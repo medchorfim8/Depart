@@ -2,9 +2,9 @@ import React from 'react';
 import {useCurrentFrame, useVideoConfig, interpolate, spring, Easing, random, staticFile, Img} from 'remotion';
 
 export const C = {
-  navy: '#0B1E5B', navy2: '#14298A', royal: '#1F44C2', blue: '#4F6FE8',
-  y: '#FFC72C', y2: '#FFB000', w: '#FFFFFF', ink: '#0B1E5B', mute: '#5B6B9A', gold: '#C98A00', red: '#E5372F',
-  card: 'rgba(255,255,255,0.88)', line: 'rgba(31,68,194,0.14)',
+  navy: '#0B1E5B', navy2: '#14298A', royal: '#1F44C2', blue: '#4F6FE8', sky: '#9DB2FF',
+  y: '#FFC72C', y2: '#FFB000', w: '#FFFFFF', ink: '#FFFFFF', mute: '#C9D6FF', gold: '#FFD25A', red: '#E5372F',
+  card: 'linear-gradient(180deg, rgba(22,41,122,.82), rgba(7,19,56,.9))', line: 'rgba(157,178,255,.24)',
 };
 export const FONT = 'Tajawal, sans-serif';
 
@@ -41,7 +41,7 @@ export const Words = ({text, delay = 0, variant = 'rise', color = C.ink, size = 
         return (
           <span key={i} style={{display: 'inline-block', color, fontSize: size, fontWeight: weight, lineHeight: 1.18,
             fontFamily: FONT, transform: t, opacity: o, filter: filt, clipPath: clip, transformOrigin: 'center bottom',
-            textShadow: '0 6px 26px rgba(31,68,194,0.18)'}}>{w}</span>
+            textShadow: '0 0 28px rgba(255,199,44,0.22)'}}>{w}</span>
         );
       })}
     </div>
@@ -56,7 +56,7 @@ export const Title = ({l1, l2, delay = 0, variant = 'rise', top = 170, size = 12
   return (
     <div style={{position: 'absolute', top, right: 80, left: 80, display: 'flex', flexDirection: 'column', alignItems: just}}>
       {l1 && <Words text={l1} delay={delay} variant={variant} size={size} style={{justifyContent: just}} />}
-      {l2 && <Words text={l2} delay={delay + 7} variant={variant} size={size} color={C.royal} style={{justifyContent: just}} />}
+      {l2 && <Words text={l2} delay={delay + 7} variant={variant} size={size} color={C.y} style={{justifyContent: just}} />}
       <div style={{height: 10, width: 170 * bar, background: `linear-gradient(90deg, ${C.y}, ${C.y2})`, borderRadius: 10, marginTop: 18}} />
       {sub && <div style={{marginTop: 22, opacity: lin(f, delay + 18, delay + 34), transform: `translateY(${(1 - lin(f, delay + 18, delay + 34)) * 20}px)`}}>
         <Words text={sub} delay={delay + 18} variant="mask" size={56} weight={700} color={subColor} stagger={3} style={{justifyContent: just}} />
@@ -67,7 +67,7 @@ export const Title = ({l1, l2, delay = 0, variant = 'rise', top = 170, size = 12
 
 /* ---------------- card ---------------- */
 export const Card = ({children, style = {}, glow = false}) => (
-  <div style={{background: C.card, border: `2px solid ${glow ? 'rgba(255,199,44,.7)' : C.line}`, borderRadius: 38, backdropFilter: 'blur(6px)', boxShadow: glow ? `0 0 0 6px rgba(255,199,44,.18), 0 26px 60px rgba(201,138,0,.22)` : '0 24px 60px rgba(31,68,194,.16)', ...style}}>{children}</div>
+  <div style={{background: C.card, border: `2px solid ${glow ? 'rgba(255,199,44,.7)' : C.line}`, borderRadius: 38, backdropFilter: 'blur(6px)', boxShadow: glow ? `0 0 0 6px rgba(255,199,44,.18), 0 26px 60px rgba(201,138,0,.22)` : '0 24px 60px rgba(0,0,10,.45)', ...style}}>{children}</div>
 );
 
 /* entrance wrapper for elements */

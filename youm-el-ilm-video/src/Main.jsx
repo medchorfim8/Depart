@@ -107,7 +107,7 @@ const Badge = () => {
 };
 
 export const Main = () => (
-  <AbsoluteFill style={{background: '#F4F8FF', direction: 'rtl'}}>
+  <AbsoluteFill style={{background: '#02061A', direction: 'rtl'}}>
     <Fonts />
     <SfxTrack />
     <Audio src={staticFile('music.wav')} loop volume={(fr) => musicLevel(fr) * interpolate(fr, [0, 15, TOTAL - 60, TOTAL], [0, 1, 1, 0], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'})} />
