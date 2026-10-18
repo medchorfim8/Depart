@@ -34,9 +34,16 @@ async def main():
     ap.add_argument('--rate', type=int, default=0, help='base speed in percent, e.g. -5 or 10')
     ap.add_argument('--pitch', default='+0Hz')
     ap.add_argument('--max-boost', type=int, default=15, help='most a sentence may be sped up, in percent')
+    ap.add_argument('--only', default='', help='regenerate just these sentences (e.g. 5,10) at --rate, keeping the current timing in src/voice.json')
     args = ap.parse_args()
 
     cfg = json.load(open(os.path.join(ROOT, 'scripts', 'voice_lines.json'), encoding='utf-8'))
+    if args.only:
+        for n in [int(x) for x in args.only.split(',')]:
+            out = os.path.join(ROOT, 'public', 'voice', f'{n:02d}.mp3')
+            dur = await synth(cfg['lines'][n - 1], args.voice, args.rate, args.pitch, out)
+            print(f'{n:2d}  {dur:5.2f}s  rate {args.rate:+d}%  -> public/voice/{n:02d}.mp3 (timing unchanged)')
+        return
     fps, cuts = cfg['fps'], cfg['cuts']
     os.makedirs(os.path.join(ROOT, 'public', 'voice'), exist_ok=True)
     clips, new_cuts = [], [0]

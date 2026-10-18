@@ -9,13 +9,10 @@ const TOTAL = cuts[cuts.length - 1];
 const comps = [S.S1, S.S2, S.S3, S.S4, S.S5, S.S6, S.S7, S.SPrize, S.S8, S.S9, S.S10];
 const trans = ['none', 'circle', 'diag', 'blinds', 'diamond', 'zoom', 'split', 'blindsV', 'slideUp', 'flip', 'circle2'];
 const TD = 18;
+const MUSIC_GAIN = 0.127;
 
-/* music sits lower while the narrator speaks (src/voice.json is written by scripts/make_voice.py) */
-const musicLevel = (fr) => {
-  if (!voice.length) return 0.55;
-  const duck = Math.max(0, ...voice.map((v) => interpolate(fr, [v.from - 8, v.from, v.from + v.frames, v.from + v.frames + 10], [0, 1, 1, 0], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'})));
-  return 0.32 - 0.2 * duck;
-};
+/* one steady music bed under the whole video (same level as scripts/mix_audio.py, 16 dB under the narration) */
+const musicLevel = () => MUSIC_GAIN;
 
 /* a different sound for each page change, plus a few accents inside scenes: [scene, frames into it, sound, volume] */
 const sfx = [

@@ -1,6 +1,9 @@
 """Generate the background music bed public/music.wav (uplifting I-V-vi-IV in D major, 100 BPM).
 
-Run: python3 scripts/make_music.py [seconds]   (needs numpy only)
+Run: python3 scripts/make_music.py [seconds] [--uniform]   (needs numpy only)
+
+--uniform keeps the full groove (pad, arpeggio, bass, soft drums) from the first
+bar to the last, so the bed sounds the same everywhere, as in the outro.
 """
 import sys
 import wave
@@ -8,7 +11,9 @@ import numpy as np
 
 SR = 44100
 BPM = 100
-DUR = float(sys.argv[1]) if len(sys.argv) > 1 else 67.5
+args = [a for a in sys.argv[1:] if not a.startswith('--')]
+UNIFORM = '--uniform' in sys.argv
+DUR = float(args[0]) if args else 67.5
 beat = 60 / BPM
 bar = beat * 4
 n = int(SR * (DUR + 1))
@@ -43,8 +48,8 @@ bars = int(np.ceil(DUR / bar))
 for b in range(bars):
     t0 = b * bar
     root, chord = prog[b % 4]
-    full = 4 <= b < bars - 2
-    fade_in = min(1, (b + 1) / 4)
+    full = UNIFORM or 4 <= b < bars - 2
+    fade_in = 1 if UNIFORM else min(1, (b + 1) / 4)
     # pad: soft, detuned, long attack
     for m in chord:
         for d, p in [(-0.003, -0.5), (0.003, 0.5)]:
@@ -78,7 +83,7 @@ for b in range(bars):
 out = np.stack([L, R], 1)[: int(SR * DUR)]
 fade = int(SR * 3)
 out[-fade:] *= np.linspace(1, 0, fade)[:, None]
-out[: int(SR * 0.5)] *= np.linspace(0, 1, int(SR * 0.5))[:, None]
+out[: int(SR * (1.0 if UNIFORM else 0.5))] *= np.linspace(0, 1, int(SR * (1.0 if UNIFORM else 0.5)))[:, None]
 out = out / np.abs(out).max() * 0.85
 with wave.open('public/music.wav', 'wb') as w:
     w.setnchannels(2)
